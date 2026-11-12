@@ -17,5 +17,6 @@ export type SeqRound = {
   done: Line;
 };
 
-export type SeqCtx = { lang: Lang; level: Level; childName: string };
+/** idx = which round of the game this is (0-based). */
+export type SeqCtx = { lang: Lang; level: Level; childName: string; idx?: number };
 export type SeqGenerator<C> = (cfg: C, rng: Rng, ctx: SeqCtx) => SeqRound;

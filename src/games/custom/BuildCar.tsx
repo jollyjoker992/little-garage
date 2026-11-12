@@ -44,7 +44,8 @@ export function BuildCar() {
   const cfg = LEVELS.buildCar[levelFor('buildCar')];
   const rng = useRef(makeRng()).current;
   const childName = useStore((s) => s.childName);
-  const [spec, setSpec] = useState<BuildSpec>(DEFAULT_SPEC);
+  // Free building starts with the child's name on the plate.
+  const [spec, setSpec] = useState<BuildSpec>(() => ({ ...DEFAULT_SPEC, plate: cfg.orders ? '' : plateName(childName).length >= 2 ? plateName(childName) : '' }));
   const [cat, setCat] = useState<Cat>('type');
   const [order, setOrder] = useState<Order | null>(() => (cfg.orders ? makeOrder(rng, cfg.traits) : null));
   const [ordersDone, setOrdersDone] = useState(0);

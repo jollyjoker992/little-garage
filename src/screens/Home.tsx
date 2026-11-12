@@ -10,6 +10,8 @@ import { ThingView } from '../ui/ThingView';
 
 export function Home() {
   const lang = useStore((s) => s.lang);
+  useStore((s) => s.childName); // re-render when the name changes
+  const title = t(lang, L('app.title')); // "King's Garage" when a name is set
   const full = useFullscreen();
   const [tip, setTip] = useState(false);
   const showFs = !isStandalone();
@@ -25,7 +27,7 @@ export function Home() {
   return (
     <div className="screen home">
       <header className="home-head">
-        <h1 className="title small">{t(lang, L('app.title'))}</h1>
+        <h1 className={`title small ${title.length > 16 ? 'long' : ''}`}>{title}</h1>
         <div className="home-head-actions">
           {showFs && (
             <button className="hold-btn fs-btn" onClick={onFs} aria-label={full ? 'Exit full screen' : 'Full screen'}>

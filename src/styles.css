@@ -48,6 +48,9 @@ svg { display: block; }
 /* Titles */
 .title { font-size: clamp(40px, 9vh, 88px); margin: 2vh 0 0; color: var(--accent); text-shadow: 0 5px 0 #fff, 0 8px 0 rgba(0,0,0,.12); letter-spacing: 1px; }
 .title.small { font-size: clamp(26px, min(6vh, 7.5vw), 52px); margin: 0; min-width: 0; line-height: 1.05; } /* wraps to two lines on small phones */
+/* A long child's name in the title ("Gara của Nguyễn Hoàng Anh Khoa"): smaller, and at most 2 lines on Home / 3 on Start */
+.title.long { font-size: clamp(32px, 6.5vh, 64px); text-align: center; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; padding-bottom: 10px; }
+.title.small.long { font-size: clamp(20px, min(4.5vh, 5.2vw), 40px); text-align: left; -webkit-line-clamp: 2; padding-bottom: 6px; }
 
 /* Buttons */
 .big-btn {

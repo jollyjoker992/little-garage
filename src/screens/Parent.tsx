@@ -79,7 +79,7 @@ export function Parent() {
       <section>
         <h3>Child's name</h3>
         <div className="prow">
-          <label htmlFor="child-name">Used by License Plate (Level 3) to spell his name</label>
+          <label htmlFor="child-name">The voice says it (cheers, stickers, hello and bye), the home screen shows it, and it goes on license plates. A short name or nickname works best.</label>
           <input id="child-name" className="ptext" type="text" maxLength={20} placeholder="e.g. Bảo" value={s.childName} onChange={(e) => update(() => ({ childName: e.target.value }))} />
         </div>
       </section>

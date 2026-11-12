@@ -1,5 +1,5 @@
 import { getState } from './store';
-import { LANG_TAG, t, type Line } from './i18n';
+import { LANG_TAG, resolveKey, t, type Line } from './i18n';
 import { sfx, SFX_DURATION, wait } from './sound';
 import type { SfxName } from './sfxNames';
 
@@ -128,8 +128,9 @@ export async function say(steps: Step | Step[]) {
       sfx(step.sfx);
       await wait(SFX_DURATION[step.sfx] * 1000 + 150);
     } else {
-      const rec = `${lang}/${step.key}`;
-      if (!step.args && recorded.has(rec)) await playFile(`audio/${rec}.mp3`, my);
+      // A recording of the personal ".kid" line wins; a recording of the plain line beats the browser voice saying the name.
+      const rec = [`${lang}/${resolveKey(lang, step.key)}`, `${lang}/${step.key}`].find((r) => recorded.has(r));
+      if (!step.args && rec) await playFile(`audio/${rec}.mp3`, my);
       else await speakText(t(lang, step), my);
     }
   }

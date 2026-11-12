@@ -4,16 +4,20 @@
 
 - Lines with several options (•) are picked at random each time.
 - `{name}` slots are filled by the game (a color, a vehicle, a brand…).
-- **Recorded voice:** put `public/audio/<lang>/<key>.mp3` (e.g. `public/audio/vi/cheer.mp3`) and add `"<lang>/<key>"` to `public/audio/manifest.json`. Recordings replace the browser voice for lines **without** `{slots}`; lines with slots always use the browser voice.
+- **The child's name:** a key ending in `.kid` is the personal version of the line above it. When a name is set in Grown-ups settings the game says the `.kid` line instead, with `{kid}` replaced by the name (some cheers keep a few lines without the name, so it isn't said every time). Without a name the plain line is used.
+- **Recorded voice:** put `public/audio/<lang>/<key>.mp3` (e.g. `public/audio/vi/cheer.mp3`) and add `"<lang>/<key>"` to `public/audio/manifest.json`. Recordings replace the browser voice for lines **without** `{slots}`; lines with slots always use the browser voice. `{kid}` doesn't count as a slot: record `<key>.kid` saying the name yourself, or record just `<key>` and it plays even when a name is set.
 
 ## App
 
 | Key | English | Tiếng Việt |
 |---|---|---|
 | `app.title` | Little Garage | Gara Nhỏ |
+| `app.title.kid` | {kid}'s Garage | Gara của {kid} |
 | `app.start` | Let's go! | Đi thôi! |
 | `app.welcome` | • Welcome to Little Garage! Where shall we drive today?<br>• Beep beep! Pick a place to play! | • Chào mừng đến Gara Nhỏ! Hôm nay mình lái xe đi đâu nào?<br>• Bíp bíp! Chọn chỗ chơi nào! |
+| `app.welcome.kid` | • Hi {kid}! Welcome to your garage! Where shall we drive today?<br>• Beep beep, {kid}! Pick a place to play! | • Chào {kid}! Chào mừng đến gara của con! Hôm nay mình lái xe đi đâu nào?<br>• Bíp bíp, {kid} ơi! Chọn chỗ chơi nào! |
 | `garage.intro` | This is your garage! Look at all your stickers and cars! | Đây là gara của con! Xem các sticker và xe của con nè! |
+| `garage.intro.kid` | This is {kid}'s garage! Look at all your stickers and cars! | Đây là gara của {kid}! Xem các sticker và xe của con nè! |
 | `sleep` | The cars are tired and going to sleep. Bye bye! See you next time! | Các xe mệt rồi, đi ngủ thôi. Tạm biệt! Hẹn gặp lại nhé! |
 
 ## Feedback (all games)
@@ -21,11 +25,15 @@
 | Key | English | Tiếng Việt |
 |---|---|---|
 | `cheer` | • Great job!<br>• Vroom vroom! You did it!<br>• Super driver!<br>• Awesome!<br>• Yes! Well done!<br>• Beep beep, hooray! | • Giỏi quá!<br>• Brừm brừm! Con làm được rồi!<br>• Tài xế siêu đẳng!<br>• Tuyệt vời!<br>• Đúng rồi! Giỏi lắm!<br>• Bíp bíp, hoan hô! |
+| `cheer.kid` | • Great job, {kid}!<br>• Vroom vroom! You did it, {kid}!<br>• Super driver!<br>• Awesome!<br>• Yes! Well done, {kid}!<br>• Beep beep, hooray! | • {kid} giỏi quá!<br>• Brừm brừm! {kid} làm được rồi!<br>• Tài xế siêu đẳng!<br>• Tuyệt vời!<br>• Đúng rồi! {kid} giỏi lắm!<br>• Bíp bíp, hoan hô! |
 | `tryAgain` | • Hmm, try again!<br>• Almost! Look again.<br>• Oops! Try another one. | • Ừm, thử lại nhé!<br>• Gần đúng rồi! Nhìn lại nào.<br>• Ối! Thử cái khác nhé. |
+| `tryAgain.kid` | • Hmm, try again!<br>• Almost, {kid}! Look again.<br>• Oops! Try another one. | • Ừm, thử lại nhé!<br>• {kid} ơi, gần đúng rồi! Nhìn lại nào.<br>• Ối! Thử cái khác nhé. |
 | `hint` | Look! It's the one that's glowing. | Nhìn này! Là cái đang sáng đó. |
 | `reveal` | Here it is! | Đây rồi! |
 | `levelUp` | Level up! You're getting so good! | Lên cấp rồi! Con giỏi quá! |
+| `levelUp.kid` | Level up! {kid}, you're getting so good! | Lên cấp rồi! {kid} giỏi quá! |
 | `reward` | You earned a sticker! A {color} {vehicle}! | Con được một sticker mới! {vehicle} màu {color}! |
+| `reward.kid` | {kid}, you earned a sticker! A {color} {vehicle}! | {kid} được một sticker mới! {vehicle} màu {color}! |
 | `reward.again` | Play again? | Chơi lại nhé? |
 
 ## Zones
@@ -146,6 +154,8 @@
 | `p.plate.make` | Let's make the plate {word}! | Mình làm biển số {word} nào! |
 | `p.plate.find` | Find the letter {letter}! | Tìm chữ {letter} nào! |
 | `p.plate.done` | {word}! You made the plate! | {word}! Con làm xong biển số rồi! |
+| `p.plate.name.kid` | Let's make a plate with your name, {kid}! | Mình làm biển số tên của con nào, {kid}! |
+| `p.plate.nameDone.kid` | {kid}! That's your name! You made the plate! | {kid}! Tên của con đó! Con làm xong biển số rồi! |
 | `p.size.order` | Park them from the smallest to the biggest! | Đỗ xe từ nhỏ nhất đến to nhất nhé! |
 | `p.size.orderRev` | Park them from the biggest to the smallest! | Đỗ xe từ to nhất đến nhỏ nhất nhé! |
 | `p.size.nextSmall` | Find the smallest one left! | Tìm xe nhỏ nhất còn lại nào! |
@@ -189,6 +199,7 @@
 | `p.sound` | Who makes this sound? | Xe nào kêu như thế này? |
 | `say.vehicle` | It's the {vehicle}! | Là {vehicle}! |
 | `say.value` | {value}! | {value}! |
+| `say.initial.kid` | {letter}! {letter} is for {kid}! | {letter}! Chữ {letter} trong tên {kid}! |
 
 ## Jobs (Who Does This Job?)
 
@@ -300,6 +311,7 @@
 | `build.surprise` | Surprise! A brand new car! | Bất ngờ! Một chiếc xe mới toanh! |
 | `build.drive` | Test drive! Tap to honk! | Lái thử nào! Chạm để bóp còi! |
 | `build.parked` | Parked in your garage! | Xe đã vào gara của con! |
+| `build.parked.kid` | Parked in {kid}'s garage! | Xe đã vào gara của {kid}! |
 | `build.go` | Vroom! Your new {name} car is in your garage! | Brừm! Chiếc xe {name} mới đã vào gara của con! |
 
 ## Traffic Light
@@ -323,6 +335,7 @@
 
 | Key | English | Tiếng Việt |
 |---|---|---|
+| `sleep.kid` | The cars are tired and going to sleep. Bye bye, {kid}! See you next time! | Các xe mệt rồi, đi ngủ thôi. Tạm biệt {kid}! Hẹn gặp lại nhé! |
 | `group.construction` | builder | công trình |
 | `group.emergency` | rescue | cứu hộ |
 | `group.road` | everyday | xe thường |
@@ -372,6 +385,7 @@
 | `plate.says` | Your plate says {word}! | Biển số là {word}! |
 | `logo.none` | no logo | không logo |
 | `order.make` | Please build me a {color} {body}! | Làm giúp mình một chiếc {body} màu {color} nhé! |
+| `order.make.kid` | • Please build me a {color} {body}!<br>• Hi {kid}! Please build me a {color} {body}! | • Làm giúp mình một chiếc {body} màu {color} nhé!<br>• Chào {kid}! Làm giúp mình một chiếc {body} màu {color} nhé! |
 | `order.number` | With the number {n} on the door! | Có số {n} trên cửa nhé! |
 | `order.wheels` | With monster wheels! | Có bánh xe khổng lồ nhé! |
 | `order.pattern` | With {pattern}! | Có {pattern} nhé! |

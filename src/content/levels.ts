@@ -28,7 +28,7 @@ export type SortCfg = { mode: 'color' | 'twoGroups' | 'threeGroups' };
 export type ReadCfg = { choices: number; sameLetter: boolean };
 export type QuickCfg = { min: number; max: number; choices: number; ms: number };
 export type WhoLeftCfg = { count: number; similar: boolean; ms: number };
-export type PlateCfg = { words: string[]; extras: number; useName: boolean };
+export type PlateCfg = { words: string[]; extras: number; useName: boolean; rounds?: number };
 export type SizeOrderCfg = { count: 3 | 4; bigFirst: boolean };
 export type CarrierCfg = { min: number; max: number; pre: boolean };
 export type PuzzleCfg = { cols: number; rows: number };
@@ -149,7 +149,7 @@ export const LEVELS = {
   // L3 spells his own name when it is set in Grown-ups (otherwise longer brand names).
   licensePlates: {
     1: { words: ['MG', 'VW', 'KIA', 'BMW', 'BUS', 'CAR'], extras: 1, useName: false, rounds: 4 },
-    2: { words: ['FORD', 'JEEP', 'AUDI', 'TAXI', 'MAZDA', 'VOLVO', 'HONDA', 'LEXUS', 'TESLA'], extras: 2, useName: false, rounds: 4 },
+    2: { words: ['FORD', 'JEEP', 'AUDI', 'TAXI', 'MAZDA', 'VOLVO', 'HONDA', 'LEXUS', 'TESLA'], extras: 2, useName: true, rounds: 4 },
     3: { words: ['TOYOTA', 'NISSAN', 'SUZUKI', 'VINFAST', 'PORSCHE', 'FERRARI', 'TRUCK'], extras: 2, useName: true, rounds: 4 },
   } as Levels<PlateCfg>,
   sizeOrder: {

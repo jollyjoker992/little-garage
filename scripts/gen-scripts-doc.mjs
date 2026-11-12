@@ -29,7 +29,8 @@ let out = `# Voice scripts
 
 - Lines with several options (•) are picked at random each time.
 - \`{name}\` slots are filled by the game (a color, a vehicle, a brand…).
-- **Recorded voice:** put \`public/audio/<lang>/<key>.mp3\` (e.g. \`public/audio/vi/cheer.mp3\`) and add \`"<lang>/<key>"\` to \`public/audio/manifest.json\`. Recordings replace the browser voice for lines **without** \`{slots}\`; lines with slots always use the browser voice.
+- **The child's name:** a key ending in \`.kid\` is the personal version of the line above it. When a name is set in Grown-ups settings the game says the \`.kid\` line instead, with \`{kid}\` replaced by the name (some cheers keep a few lines without the name, so it isn't said every time). Without a name the plain line is used.
+- **Recorded voice:** put \`public/audio/<lang>/<key>.mp3\` (e.g. \`public/audio/vi/cheer.mp3\`) and add \`"<lang>/<key>"\` to \`public/audio/manifest.json\`. Recordings replace the browser voice for lines **without** \`{slots}\`; lines with slots always use the browser voice. \`{kid}\` doesn't count as a slot: record \`<key>.kid\` saying the name yourself, or record just \`<key>\` and it plays even when a name is set.
 
 `;
 for (const [title, re] of SECTIONS) {

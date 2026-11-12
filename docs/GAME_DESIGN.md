@@ -22,6 +22,7 @@ He can't read, so **every instruction is spoken** (English or Vietnamese; switch
 9. **Private and offline.** No ads, no outside links, no accounts, no tracking. Progress lives in the browser on that device.
 10. **iOS audio.** The first screen is one big ▶ button: iOS only allows sound after a tap.
 11. **Full screen.** Tapping ▶ also goes full screen (browsers only allow it right after a tap); the ⛶ button on the home screen toggles it. iPhone Safari can't make pages full screen, so there the button explains *Add to Home Screen*; the button is hidden when the app is already opened from the home screen.
+12. **His name.** When a name is set in Grown-ups settings, the voice uses it (hello and bye, about half the cheers, a gentle "Almost, King!", level up, stickers, the Build a Car customers), the title becomes "King's Garage" / "Gara của King", Build a Car starts with his name on the plate, the last License Plate (L2, L3) spells it, and round 2 of Letter Highway asks for its first letter ("K is for King!"). Without a name everything stays generic.
 
 ## Map: 6 zones
 | Zone | Teaches | Background |
@@ -52,10 +53,10 @@ Status: ✅ playable now · 📝 designed, not built yet · ⏸ built but turned
 | Game | Status | Mechanic | L1 | L2 | L3 |
 |---|---|---|---|---|---|
 | Read the Brand `readBrand` | ✅ | A logo + written names: tap the word that says the brand | 2 words, different first letters | 3 words | 3 words, one with the **same first letter** (Mazda / Mercedes) |
-| Letter Highway `letterHighway` | ✅ | A letter sign; tap the car wearing that letter | A–F | A–M | A–Z, lowercase on cars |
+| Letter Highway `letterHighway` | ✅ | A letter sign; tap the car wearing that letter | A–F | A–M | A–Z, lowercase on cars · round 2 is the first letter of his name when it's in the level's letters |
 | Brand Letters `brandLetters` | ✅ | "Toyota starts with… T!" — names shown with the first letter in red | logo → letter | letter → logo | both + construction vehicles (English) |
 | Letter Road `letterRoad` | ✅ | Drive a car with the finger along a capital letter drawn as a road, stroke by stroke in writing order (first writing) | straight letters L T I H E F V X Z | curves O C U J D P N A M W K Y | all 26 |
-| License Plates `licensePlates` | ✅ | Copy the plate by tapping its letters in order | MG, KIA, BMW, BUS… | FORD, JEEP, VOLVO… | **his own name** (set in Grown-ups), else TOYOTA… |
+| License Plates `licensePlates` | ✅ | Copy the plate by tapping its letters in order | MG, KIA, BMW, BUS… | FORD, JEEP, VOLVO… | TOYOTA, NISSAN… · L2 and L3: **the last plate is his own name** (set in Grown-ups) |
 | ABC Convoy `abcConvoy` | ⏸ | *(off: the alphabet order means little yet)* | | | |
 
 ### 🎨 Paint Shop — colors & shapes

@@ -1,6 +1,6 @@
 import { L } from '../../engine/i18n';
 import { pick, sample, shuffle } from '../../engine/rng';
-import type { PlateCfg, SizeOrderCfg } from '../../content/levels';
+import { DEFAULT_ROUNDS, type PlateCfg, type SizeOrderCfg } from '../../content/levels';
 import type { Thing } from '../../content/things';
 import { VEHICLE_IDS } from '../../content/vehicles';
 import type { SeqGenerator } from './types';
@@ -12,22 +12,25 @@ export function plateName(name: string): string {
   return name.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[đĐ]/g, 'D').toUpperCase().replace(/[^A-Z]/g, '').slice(0, 8);
 }
 
-/** License Plate: copy the word on the plate by tapping its letters in order. */
+/** License Plate: copy the word on the plate by tapping its letters in order.
+ *  With useName and a name set, the last plate of the game is the child's own name. */
 export const licensePlate: SeqGenerator<PlateCfg> = (cfg, rng, ctx) => {
-  const own = cfg.useName ? plateName(ctx.childName) : '';
-  const word = own.length >= 2 ? own : pick(rng, cfg.words);
+  const lastRound = (ctx.idx ?? 0) === (cfg.rounds ?? DEFAULT_ROUNDS) - 1;
+  const own = cfg.useName && lastRound ? plateName(ctx.childName) : '';
+  const mine = own.length >= 2;
+  const word = mine ? own : pick(rng, cfg.words);
   const letters = word.split('');
   const extras = sample(rng, ALPHA.filter((c) => !letters.includes(c)), cfg.extras);
   const pool = shuffle(rng, [...letters, ...extras].map((ch, i) => ({ id: `t${i}`, key: ch, thing: { t: 'letter', ch } as Thing })));
   return {
-    prompt: L('p.plate.make', { word: own.length >= 2 ? ctx.childName : word }),
+    prompt: mine ? L('p.plate.name.kid') : L('p.plate.make', { word }),
     model: word,
     layout: 'plate',
     pool,
     order: letters,
     sayItem: (i) => L('say.value', { value: letters[i] }),
     hint: (i) => L('p.plate.find', { letter: letters[i] }),
-    done: L('p.plate.done', { word: own.length >= 2 ? ctx.childName : word }),
+    done: mine ? L('p.plate.nameDone.kid') : L('p.plate.done', { word }),
   };
 };
 

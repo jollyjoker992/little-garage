@@ -18,14 +18,14 @@ import type { SeqRound } from './types';
 export function SequenceGame({ gameId }: { gameId: string }) {
   const rng = useRef(makeRng()).current;
   const back = `#/zone/${GAME_BY_ID[gameId]?.zones[0] ?? ''}`;
-  const make = useCallback((): { round: SeqRound; rounds: number } => {
+  const make = useCallback((idx: number): { round: SeqRound; rounds: number } => {
     const level = levelFor(gameId);
     const cfg = (LEVELS as Record<string, Record<number, { rounds?: number }>>)[gameId][level];
     const st = getState();
-    return { round: SEQ_GENERATORS[gameId](cfg, rng, { lang: st.lang, level, childName: st.childName }), rounds: cfg.rounds ?? DEFAULT_ROUNDS };
+    return { round: SEQ_GENERATORS[gameId](cfg, rng, { lang: st.lang, level, childName: st.childName, idx }), rounds: cfg.rounds ?? DEFAULT_ROUNDS };
   }, [gameId, rng]);
 
-  const [{ round: r, rounds }, setRound] = useState(make);
+  const [{ round: r, rounds }, setRound] = useState(() => make(0));
   const [idx, setIdx] = useState(0);
   const [placed, setPlaced] = useState<string[]>([]); // pool ids, in slot order
   const [misses, setMisses] = useState(0);
@@ -79,12 +79,12 @@ export function SequenceGame({ gameId }: { gameId: string }) {
     setRoundMisses(0);
     if (idx + 1 >= rounds) setFinished(true);
     else {
-      setIdx((i) => i + 1);
-      setRound(make());
+      setIdx(idx + 1);
+      setRound(make(idx + 1));
     }
   };
 
-  if (finished) return <Reward back={back} onAgain={() => { setFinished(false); setIdx(0); setRound(make()); }} />;
+  if (finished) return <Reward back={back} onAgain={() => { setFinished(false); setIdx(0); setRound(make(0)); }} />;
 
   const byId = Object.fromEntries(r.pool.map((p) => [p.id, p]));
   return (

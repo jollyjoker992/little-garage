@@ -11,12 +11,27 @@ export const LANG_TAG: Record<Lang, string> = { en: 'en-US', vi: 'vi-VN' };
 
 export const L = (key: string, args?: Record<string, Arg>): Line => ({ key, args });
 
+// ── The child's name ──
+// A line "x" can have a personal version "x.kid" that uses {kid}. When a name is set (Grown-ups settings),
+// the game says "x.kid" instead of "x"; without a name it says "x". {kid} is only allowed in ".kid" lines (tests enforce it).
+let kid = '';
+/** Called by the store whenever the name changes. */
+export const setKidName = (name: string) => { kid = name.trim(); };
+export const kidName = () => kid;
+
+/** The key actually used for a line: its ".kid" version when a name is set and one exists. */
+export function resolveKey(lang: Lang, key: string): string {
+  const k = `${key}.kid`;
+  return kid && (k in DICTS[lang] || k in DICTS.en) ? k : key;
+}
+
 export function t(lang: Lang, line: Line | string, rnd: () => number = Math.random): string {
   const l = typeof line === 'string' ? { key: line } : line;
-  let v = DICTS[lang][l.key] ?? DICTS.en[l.key] ?? l.key;
+  const key = resolveKey(lang, l.key);
+  let v = DICTS[lang][key] ?? DICTS.en[key] ?? key;
   if (Array.isArray(v)) v = v[Math.floor(rnd() * v.length)];
   return v.replace(/\{(\w+)\}/g, (_, name: string) => {
-    const a = l.args?.[name];
+    const a = l.args?.[name] ?? (name === 'kid' ? kid : null);
     if (a == null) return '';
     return typeof a === 'object' ? t(lang, a, rnd) : String(a);
   });

@@ -1,21 +1,31 @@
 // English voice script. Every key here must also exist in vi.ts (tests enforce it).
 // An array means "pick one at random". {name} is filled in by the game.
+// A key ending in ".kid" is the personal version of the line before it: it is used instead when the child's
+// name is set in Grown-ups settings, and {kid} becomes the name.
 // To use a real recording instead of the browser voice, see docs/SCRIPTS.md.
 export const en: Record<string, string | string[]> = {
   // ── App ──
   'app.title': 'Little Garage',
+  'app.title.kid': "{kid}'s Garage",
   'app.start': "Let's go!",
   'app.welcome': ['Welcome to Little Garage! Where shall we drive today?', 'Beep beep! Pick a place to play!'],
+  'app.welcome.kid': ["Hi {kid}! Welcome to your garage! Where shall we drive today?", 'Beep beep, {kid}! Pick a place to play!'],
   'garage.intro': 'This is your garage! Look at all your stickers and cars!',
+  'garage.intro.kid': "This is {kid}'s garage! Look at all your stickers and cars!",
   'sleep': 'The cars are tired and going to sleep. Bye bye! See you next time!',
+  'sleep.kid': 'The cars are tired and going to sleep. Bye bye, {kid}! See you next time!',
 
   // ── Feedback (all games) ──
   'cheer': ['Great job!', 'Vroom vroom! You did it!', 'Super driver!', 'Awesome!', 'Yes! Well done!', 'Beep beep, hooray!'],
+  'cheer.kid': ['Great job, {kid}!', 'Vroom vroom! You did it, {kid}!', 'Super driver!', 'Awesome!', 'Yes! Well done, {kid}!', 'Beep beep, hooray!'],
   'tryAgain': ['Hmm, try again!', 'Almost! Look again.', 'Oops! Try another one.'],
+  'tryAgain.kid': ['Hmm, try again!', 'Almost, {kid}! Look again.', 'Oops! Try another one.'],
   'hint': "Look! It's the one that's glowing.",
   'reveal': 'Here it is!',
   'levelUp': "Level up! You're getting so good!",
+  'levelUp.kid': "Level up! {kid}, you're getting so good!",
   'reward': 'You earned a sticker! A {color} {vehicle}!',
+  'reward.kid': '{kid}, you earned a sticker! A {color} {vehicle}!',
   'reward.again': 'Play again?',
 
   // ── Zones ──
@@ -127,6 +137,8 @@ export const en: Record<string, string | string[]> = {
   'p.plate.make': "Let's make the plate {word}!",
   'p.plate.find': 'Find the letter {letter}!',
   'p.plate.done': '{word}! You made the plate!',
+  'p.plate.name.kid': "Let's make a plate with your name, {kid}!",
+  'p.plate.nameDone.kid': "{kid}! That's your name! You made the plate!",
   'p.size.order': 'Park them from the smallest to the biggest!',
   'p.size.orderRev': 'Park them from the biggest to the smallest!',
   'p.size.nextSmall': 'Find the smallest one left!',
@@ -178,6 +190,7 @@ export const en: Record<string, string | string[]> = {
   'p.sound': 'Who makes this sound?',
   'say.vehicle': "It's the {vehicle}!",
   'say.value': '{value}!',
+  'say.initial.kid': '{letter}! {letter} is for {kid}!',
 
   // ── Jobs ──
   'job.fireTruck': "Oh no, there's a fire! Who can help?",
@@ -247,7 +260,9 @@ export const en: Record<string, string | string[]> = {
   'build.surprise': 'Surprise! A brand new car!',
   'build.drive': 'Test drive! Tap to honk!',
   'build.parked': 'Parked in your garage!',
+  'build.parked.kid': "Parked in {kid}'s garage!",
   'order.make': 'Please build me a {color} {body}!',
+  'order.make.kid': ['Please build me a {color} {body}!', 'Hi {kid}! Please build me a {color} {body}!'],
   'order.number': 'With the number {n} on the door!',
   'order.wheels': 'With monster wheels!',
   'order.pattern': 'With {pattern}!',

@@ -5,11 +5,14 @@ Always run `npm test` after a change. The tests catch missing translations, miss
 ## Change wording / translations
 Edit `src/content/i18n/en.ts` **and** `vi.ts` (same keys and `{slots}` in both), then `npm run docs:scripts` to refresh `docs/SCRIPTS.md`.
 
+**Lines with the child's name:** add a `<key>.kid` line next to `<key>` and use `{kid}` in it, in both files. When a name is set, the game says `<key>.kid` instead of `<key>`. To keep the name from being said every time, make it a list and keep some entries without `{kid}` (see `cheer.kid`). `{kid}` is only allowed in `.kid` lines (tests check this).
+
 ## Record a real voice (e.g. Dad's)
 1. Record a short mp3 per line, e.g. `public/audio/vi/cheer.mp3`, `public/audio/vi/game.count.intro.mp3`.
 2. Add `"vi/cheer"`, `"vi/game.count.intro"` to `public/audio/manifest.json`.
 3. Lines with `{slots}` (e.g. `p.wash.find`) can't be recorded; they always use the browser voice.
 For random lines like `cheer`, the recording is used every time.
+4. `{kid}` isn't a slot: record `vi/cheer.kid` with the name in it, or just `vi/cheer` and that plays even when a name is set.
 
 ## Make a game easier / harder
 Edit `src/content/levels.ts`. Example: count to 4 at Level 1 → `count: { 1: { min: 1, max: 4, choices: 2 } }`. Add `rounds: 8` to change session length.

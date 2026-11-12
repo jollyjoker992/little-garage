@@ -33,9 +33,19 @@ describe('rules', () => {
     expect(plateName('Đức')).toBe('DUC');
     expect(plateName('Minh-Khôi 2')).toBe('MINHKHOI');
   });
-  it('L3 plate spells the child name when set', () => {
-    const r = SEQ_GENERATORS.licensePlates(LEVELS.licensePlates[3], makeRng(1), { lang: 'vi', level: 3, childName: 'Bảo' });
-    expect(r.order.join('')).toBe('BAO');
+  it('L2/L3: the last plate spells the child name when set; other plates and L1 never do', () => {
+    for (const lv of [1, 2, 3] as Level[]) {
+      const cfg = LEVELS.licensePlates[lv];
+      const rounds = cfg.rounds ?? 5;
+      for (let idx = 0; idx < rounds; idx++) {
+        const r = SEQ_GENERATORS.licensePlates(cfg, makeRng(idx), { lang: 'vi', level: lv, childName: 'Bảo', idx });
+        const named = lv > 1 && idx === rounds - 1;
+        expect(r.order.join('') === 'BAO', `L${lv} round ${idx}`).toBe(named);
+        expect(r.prompt.key, `L${lv} round ${idx}`).toBe(named ? 'p.plate.name.kid' : 'p.plate.make');
+      }
+    }
+    const r = SEQ_GENERATORS.licensePlates(LEVELS.licensePlates[3], makeRng(1), { lang: 'vi', level: 3, childName: '', idx: 3 });
+    expect(r.prompt.key).toBe('p.plate.make');
   });
   it('size parking: small → big (L1, L2), big → small (L3)', () => {
     for (const lv of [1, 2, 3] as Level[]) {

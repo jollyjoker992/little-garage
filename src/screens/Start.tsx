@@ -4,9 +4,11 @@ import { useStore } from '../engine/store';
 
 export function Start({ onStart }: { onStart: () => void }) {
   const lang = useStore((s) => s.lang);
+  useStore((s) => s.childName); // re-render when the name changes
+  const title = t(lang, L('app.title')); // "King's Garage" when a name is set
   return (
     <div className="screen start">
-      <h1 className="title">{t(lang, L('app.title'))}</h1>
+      <h1 className={`title ${title.length > 16 ? 'long' : ''}`}>{title}</h1>
       <div className="start-cars">
         <div className="drive-in"><VehicleArt v="excavator" /></div>
         <div className="drive-in" style={{ animationDelay: '0.2s' }}><VehicleArt v="car" body="sports" brand="ferrari" /></div>

@@ -31,7 +31,8 @@ export type Stage =
   /** Parking Stories: say lines[0], move the cars (leave / arrive), say lines[1]. */
   | { kind: 'story'; lines: [Line, Line]; motion: ('leave' | 'arrive' | null)[] };
 
-export type Ctx = { lang: Lang; level: Level };
+/** childName: the name from Grown-ups settings ('' or missing = none). idx: which round of the game (0-based). */
+export type Ctx = { lang: Lang; level: Level; childName?: string; idx?: number };
 export type Generator<C> = (cfg: C, rng: Rng, ctx: Ctx) => Round;
 
 /** Shuffle answer + distractors into choices with ids c0..cN. */

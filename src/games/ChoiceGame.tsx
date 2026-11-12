@@ -27,9 +27,9 @@ export function ChoiceGame({ gameId }: { gameId: string }) {
     const level = levelFor(gameId);
     const cfg = (LEVELS as Record<string, Record<number, { rounds?: number }>>)[gameId][level];
     // Never show the same question twice in a row (same answer + same choices).
-    let round = GENERATORS[gameId](cfg, rng, { lang: getState().lang, level });
+    let round = GENERATORS[gameId](cfg, rng, { lang: getState().lang, level, childName: getState().childName, idx });
     const sig = (x: Round) => JSON.stringify([x.prompt, x.scene.map(thingKey), x.choices.map((c) => thingKey(c.thing)).sort()]);
-    for (let tries = 0; tries < 8 && sig(round) === lastSig.current; tries++) round = GENERATORS[gameId](cfg, rng, { lang: getState().lang, level });
+    for (let tries = 0; tries < 8 && sig(round) === lastSig.current; tries++) round = GENERATORS[gameId](cfg, rng, { lang: getState().lang, level, childName: getState().childName, idx });
     lastSig.current = sig(round);
     return { idx, round, rounds: cfg.rounds ?? DEFAULT_ROUNDS };
   }, [gameId, rng]);

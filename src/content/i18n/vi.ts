@@ -2,18 +2,26 @@
 export const vi: Record<string, string | string[]> = {
   // ── App ──
   'app.title': 'Gara Nhỏ',
+  'app.title.kid': 'Gara của {kid}',
   'app.start': 'Đi thôi!',
   'app.welcome': ['Chào mừng đến Gara Nhỏ! Hôm nay mình lái xe đi đâu nào?', 'Bíp bíp! Chọn chỗ chơi nào!'],
+  'app.welcome.kid': ['Chào {kid}! Chào mừng đến gara của con! Hôm nay mình lái xe đi đâu nào?', 'Bíp bíp, {kid} ơi! Chọn chỗ chơi nào!'],
   'garage.intro': 'Đây là gara của con! Xem các sticker và xe của con nè!',
+  'garage.intro.kid': 'Đây là gara của {kid}! Xem các sticker và xe của con nè!',
   'sleep': 'Các xe mệt rồi, đi ngủ thôi. Tạm biệt! Hẹn gặp lại nhé!',
+  'sleep.kid': 'Các xe mệt rồi, đi ngủ thôi. Tạm biệt {kid}! Hẹn gặp lại nhé!',
 
   // ── Feedback ──
   'cheer': ['Giỏi quá!', 'Brừm brừm! Con làm được rồi!', 'Tài xế siêu đẳng!', 'Tuyệt vời!', 'Đúng rồi! Giỏi lắm!', 'Bíp bíp, hoan hô!'],
+  'cheer.kid': ['{kid} giỏi quá!', 'Brừm brừm! {kid} làm được rồi!', 'Tài xế siêu đẳng!', 'Tuyệt vời!', 'Đúng rồi! {kid} giỏi lắm!', 'Bíp bíp, hoan hô!'],
   'tryAgain': ['Ừm, thử lại nhé!', 'Gần đúng rồi! Nhìn lại nào.', 'Ối! Thử cái khác nhé.'],
+  'tryAgain.kid': ['Ừm, thử lại nhé!', '{kid} ơi, gần đúng rồi! Nhìn lại nào.', 'Ối! Thử cái khác nhé.'],
   'hint': 'Nhìn này! Là cái đang sáng đó.',
   'reveal': 'Đây rồi!',
   'levelUp': 'Lên cấp rồi! Con giỏi quá!',
+  'levelUp.kid': 'Lên cấp rồi! {kid} giỏi quá!',
   'reward': 'Con được một sticker mới! {vehicle} màu {color}!',
+  'reward.kid': '{kid} được một sticker mới! {vehicle} màu {color}!',
   'reward.again': 'Chơi lại nhé?',
 
   // ── Zones ──
@@ -125,6 +133,8 @@ export const vi: Record<string, string | string[]> = {
   'p.plate.make': 'Mình làm biển số {word} nào!',
   'p.plate.find': 'Tìm chữ {letter} nào!',
   'p.plate.done': '{word}! Con làm xong biển số rồi!',
+  'p.plate.name.kid': 'Mình làm biển số tên của con nào, {kid}!',
+  'p.plate.nameDone.kid': '{kid}! Tên của con đó! Con làm xong biển số rồi!',
   'p.size.order': 'Đỗ xe từ nhỏ nhất đến to nhất nhé!',
   'p.size.orderRev': 'Đỗ xe từ to nhất đến nhỏ nhất nhé!',
   'p.size.nextSmall': 'Tìm xe nhỏ nhất còn lại nào!',
@@ -176,6 +186,7 @@ export const vi: Record<string, string | string[]> = {
   'p.sound': 'Xe nào kêu như thế này?',
   'say.vehicle': 'Là {vehicle}!',
   'say.value': '{value}!',
+  'say.initial.kid': '{letter}! Chữ {letter} trong tên {kid}!',
 
   // ── Jobs ──
   'job.fireTruck': 'Ôi, có đám cháy! Ai giúp được nhỉ?',
@@ -245,7 +256,9 @@ export const vi: Record<string, string | string[]> = {
   'build.surprise': 'Bất ngờ! Một chiếc xe mới toanh!',
   'build.drive': 'Lái thử nào! Chạm để bóp còi!',
   'build.parked': 'Xe đã vào gara của con!',
+  'build.parked.kid': 'Xe đã vào gara của {kid}!',
   'order.make': 'Làm giúp mình một chiếc {body} màu {color} nhé!',
+  'order.make.kid': ['Làm giúp mình một chiếc {body} màu {color} nhé!', 'Chào {kid}! Làm giúp mình một chiếc {body} màu {color} nhé!'],
   'order.number': 'Có số {n} trên cửa nhé!',
   'order.wheels': 'Có bánh xe khổng lồ nhé!',
   'order.pattern': 'Có {pattern} nhé!',

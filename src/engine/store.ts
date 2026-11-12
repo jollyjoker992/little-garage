@@ -2,7 +2,7 @@ import { useSyncExternalStore } from 'react';
 import type { ColorId } from '../content/colors';
 import type { Level } from '../content/levels';
 import type { CarBody, VehicleId } from '../content/vehicles';
-import type { Lang } from './i18n';
+import { setKidName, type Lang } from './i18n';
 import type { BuildSpec } from '../content/carParts';
 
 export type Sticker = { v: VehicleId; color: ColorId; at: number };
@@ -54,12 +54,14 @@ function load(): State {
 }
 
 let state: State = load();
+setKidName(state.childName);
 const subs = new Set<() => void>();
 
 export const getState = () => state;
 
 export function update(fn: (s: State) => Partial<State>) {
   state = { ...state, ...fn(state) };
+  setKidName(state.childName);
   try {
     localStorage.setItem(KEY, JSON.stringify(state));
   } catch {
