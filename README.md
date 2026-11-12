@@ -10,6 +10,22 @@ A car-themed learning game for 3–4 year olds: **numbers, letters, colors, shap
 - ⛶ full screen: tapping ▶ goes full screen; the ⛶ button on the home screen toggles it (iPhone: use Add to Home Screen)
 - Grown-ups settings: tap ⚙️ on the home screen (language, voice speed, levels, hide games, session limit)
 
+## Screenshots
+On an iPad in landscape. Try it at [little-garage.pages.dev](https://little-garage.pages.dev).
+
+![Home screen: six zones (Parking Lot, Highway, Paint Shop, Construction Site, Garage, Playground)](assets/screenshots/home.png)
+
+| | |
+|---|---|
+| ![Count the Cars: tap each car to count it, then pick the number](assets/screenshots/count-the-cars.png) | ![Read the Brand: which name goes with this logo?](assets/screenshots/read-the-brand.png) |
+| **Count the Cars**: tap each car to count it, then pick the number | **Read the Brand**: which name goes with this logo? |
+| ![Pattern Road: which cone comes next?](assets/screenshots/pattern-road.png) | ![Brand Memory: flip the cards to find matching logos](assets/screenshots/brand-memory.png) |
+| **Pattern Road**: which cone comes next? | **Brand Memory**: flip cards to find the pairs |
+| ![Build a Car: body, paint, pattern, wheels, number, extras and a driver](assets/screenshots/build-a-car.png) | ![Paint Shop: tap a color, then tap part of the car](assets/screenshots/paint-shop.png) |
+| **Build a Car**: body, paint, stripes, wheels, number, driver | **Paint Shop**: tap a color, then tap part of the car |
+| ![Drawing Board: pencil, crayon, brush, rainbow, stars and car stamps](assets/screenshots/drawing-board.png) | ![My Garage: stickers earned by finishing games](assets/screenshots/my-garage.png) |
+| **Drawing Board**: rainbow, stars and car stamps | **My Garage**: stickers, paintings, drawings and built cars |
+
 Needs **Node 24+ and npm 11+** (`nvm use` reads `.nvmrc`).
 
 ```sh
