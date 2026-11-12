@@ -25,6 +25,8 @@ export type State = {
   stickers: Sticker[];
   gallery: Painting[];
   cars: BuiltCar[];
+  /** Car names grown-ups typed in Build a Car (newest first). */
+  modelNames: string[];
 };
 
 const KEY = 'little-garage:v1';
@@ -41,6 +43,7 @@ const defaults = (): State => ({
   stickers: [],
   gallery: [],
   cars: [],
+  modelNames: [],
 });
 
 function load(): State {

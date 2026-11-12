@@ -2,28 +2,36 @@
 // licence plate, roof extras and a driver in the window. Pure display (not a Paint Shop page).
 import { useId } from 'react';
 import { COLORS } from '../content/colors';
-import type { BuildSpec } from '../content/carParts';
+import { MODEL_MAX, rimHex, type BuildSpec } from '../content/carParts';
 import { LogoArt } from './logos';
 import { OUT } from './kit';
 import { CAR_SHAPES, pathCenter } from './vehicles';
 
 const WHEEL_SCALE = { small: 0.8, normal: 1, monster: 1.65 } as const;
 
+/** True for colours where dark spokes would disappear (black, brown, purple…). */
+const isDark = (hex: string) => {
+  const n = parseInt(hex.slice(1), 16);
+  return ((n >> 16) & 255) * 0.299 + ((n >> 8) & 255) * 0.587 + (n & 255) * 0.114 < 110;
+};
+
+/** The rim inside a black tyre: 4 styles, in the chosen wheel colour. */
 export function Rim({ x, y, r, style, color }: { x: number; y: number; r: number; style: number; color: string }) {
   const hub = r * 0.45;
+  const line = isDark(color) ? '#eceff1' : OUT;
   if (style === 1) return (<>
-    <circle cx={x} cy={y} r={hub} fill="#cfd8dc" />
-    {[0, 72, 144, 216, 288].map((a) => <line key={a} x1={x} y1={y} x2={x + Math.cos((a * Math.PI) / 180) * hub} y2={y + Math.sin((a * Math.PI) / 180) * hub} stroke={OUT} strokeWidth="1.6" />)}
+    <circle cx={x} cy={y} r={hub} fill={color} />
+    {[0, 72, 144, 216, 288].map((a) => <line key={a} x1={x} y1={y} x2={x + Math.cos((a * Math.PI) / 180) * hub} y2={y + Math.sin((a * Math.PI) / 180) * hub} stroke={line} strokeWidth="1.6" />)}
   </>);
   if (style === 2) return (<>
-    <circle cx={x} cy={y} r={hub} fill="#eceff1" />
-    {[0, 72, 144, 216, 288].map((a) => <circle key={a} cx={x + Math.cos((a * Math.PI) / 180) * hub * 0.55} cy={y + Math.sin((a * Math.PI) / 180) * hub * 0.55} r={hub * 0.18} fill={OUT} />)}
+    <circle cx={x} cy={y} r={hub} fill={color} />
+    {[0, 72, 144, 216, 288].map((a) => <circle key={a} cx={x + Math.cos((a * Math.PI) / 180) * hub * 0.55} cy={y + Math.sin((a * Math.PI) / 180) * hub * 0.55} r={hub * 0.18} fill={line} />)}
   </>);
   if (style === 3) return (<>
     <circle cx={x} cy={y} r={hub * 1.15} fill={color} stroke={OUT} strokeWidth="1.5" />
-    <circle cx={x} cy={y} r={hub * 0.4} fill="#eceff1" />
+    <circle cx={x} cy={y} r={hub * 0.4} fill={isDark(color) ? '#eceff1' : '#fff'} stroke={OUT} strokeWidth="1" />
   </>);
-  return <circle cx={x} cy={y} r={hub} fill="#cfd8dc" />;
+  return <circle cx={x} cy={y} r={hub} fill={color} />;
 }
 
 export function Driver({ kind, x, y, s }: { kind: string; x: number; y: number; s: number }) {
@@ -149,10 +157,11 @@ export function CustomCar({ spec, className }: { spec: BuildSpec; className?: st
       {s.wheels.x.map((x) => (
         <g key={x}>
           <circle cx={x} cy={wy} r={wheelR} fill="#263238" stroke={OUT} strokeWidth="3" />
-          <Rim x={x} y={wy} r={wheelR} style={spec.rim} color={c2} />
+          <Rim x={x} y={wy} r={wheelR} style={spec.rim} color={rimHex(spec.rimColor ?? 'silver')} />
         </g>
       ))}
-      {/* plate: on the very back, drawn over the wheels so big wheels never hide it */}
+      {/* model name and plate: drawn over the wheels so big wheels never hide them */}
+      {spec.model && <g transform={lift ? `translate(0 ${-lift})` : undefined}><ModelName text={spec.model} s={s} /></g>}
       {spec.plate && (<g transform={lift ? `translate(0 ${-lift})` : undefined}>
         <rect x={s.stripe[0] - 18} y="80" width={Math.max(24, spec.plate.length * 5.2 + 7)} height="11" rx="2" fill="#fff" stroke={OUT} strokeWidth="1.8" />
         <text x={s.stripe[0] - 18 + Math.max(24, spec.plate.length * 5.2 + 7) / 2} y="88.3" fontSize="7.5" fontWeight="900" textAnchor="middle" fill={OUT} fontFamily="Arial, sans-serif">{spec.plate}</text>
@@ -161,8 +170,24 @@ export function CustomCar({ spec, className }: { spec: BuildSpec; className?: st
   );
 }
 
+/** The model name ("RAPTOR") on the back half of the side, above the stripe and behind the door number
+ *  (where real cars wear their model badge): white capitals with a dark outline, squeezed to fit. */
+function ModelName({ text, s }: { text: string; s: (typeof CAR_SHAPES)[keyof typeof CAR_SHAPES] }) {
+  const word = text.slice(0, MODEL_MAX).toUpperCase();
+  const x1 = s.stripe[0] + (s.spare ? 18 : s.deck >= 80 ? 24 : 12); // after the spare tyre / the thin tail of a race car
+  const x2 = s.badge[0] - 6; // a gap before the door number
+  const size = 9.5;
+  const room = x2 - x1;
+  const natural = word.length * size * 0.74;
+  return (
+    <text x={(x1 + x2) / 2} y={s.stripe[2] - 2} fontSize={size} fontWeight="900" fontStyle="italic" textAnchor="middle" fontFamily="Arial, sans-serif"
+      fill="#fff" stroke={OUT} strokeWidth="2.4" strokeLinejoin="round" paintOrder="stroke"
+      {...(natural > room ? { textLength: room, lengthAdjust: 'spacingAndGlyphs' } : {})}>{word}</text>
+  );
+}
+
 /** Small icons for the option buttons. */
-export function WheelIcon({ rim, color = '#e53935' }: { rim: number; color?: string }) {
+export function WheelIcon({ rim, color = '#cfd8dc' }: { rim: number; color?: string }) {
   return (
     <svg viewBox="0 0 40 40" className="thing-svg">
       <circle cx="20" cy="20" r="17" fill="#263238" />

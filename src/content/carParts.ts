@@ -1,6 +1,6 @@
 // Build-a-Car: every trait the child can pick, plus customer orders (Level 2–3).
 import type { BrandId } from './brands';
-import type { ColorId } from './colors';
+import { COLORS, type ColorId } from './colors';
 import type { CarBody } from './vehicles';
 import { CAR_BODIES } from './vehicles';
 import type { SfxName } from '../engine/sfxNames';
@@ -11,6 +11,8 @@ export type Pattern = 'none' | 'stripes' | 'flames' | 'stars' | 'dots' | 'twoTon
 export type Extra = 'spoiler' | 'rack' | 'siren' | 'taxi' | 'flag';
 export type Driver = 'none' | 'boy' | 'dog' | 'cat' | 'bear';
 export type Engine = 'hum' | 'vroom' | 'race';
+/** Wheel (rim) colour: classic silver, gold, or any paint. The tyre is always black. */
+export type RimColor = ColorId | 'silver' | 'gold';
 
 export type BuildSpec = {
   body: CarBody;
@@ -19,10 +21,13 @@ export type BuildSpec = {
   pattern: Pattern;
   wheels: Wheels;
   rim: 0 | 1 | 2 | 3;
+  rimColor: RimColor;
   /** 0 = no number */
   number: number;
   /** '' = no plate */
   plate: string;
+  /** Model name written on the side, as typed (drawn in capitals), e.g. "Raptor". '' = none */
+  model: string;
   extras: Extra[];
   driver: Driver;
   brand: BrandId | null;
@@ -34,6 +39,12 @@ export const BODY_OPTIONS: CarBody[] = CAR_BODIES;
 export const PAINTS: ColorId[] = ['red', 'orange', 'yellow', 'green', 'blue', 'sky', 'purple', 'pink', 'black', 'white', 'gray', 'brown'];
 export const WHEELS: Wheels[] = ['small', 'normal', 'monster'];
 export const RIMS = [0, 1, 2, 3] as const;
+export const RIM_COLORS: RimColor[] = ['silver', 'gold', ...PAINTS];
+const RIM_METAL = { silver: '#cfd8dc', gold: '#ffc107' } as const;
+export const rimHex = (c: RimColor): string => (c === 'silver' || c === 'gold' ? RIM_METAL[c] : COLORS[c]);
+/** Ready-made car names a child can tap without typing. Grown-ups type their own with ✏️. */
+export const MODEL_PRESETS = ['Turbo', 'Rocket', 'Super'];
+export const MODEL_MAX = 12;
 export const PATTERNS: Pattern[] = ['none', 'stripes', 'flames', 'stars', 'dots', 'twoTone'];
 export const EXTRAS: Extra[] = ['spoiler', 'rack', 'siren', 'taxi', 'flag'];
 export const DRIVERS: Driver[] = ['none', 'boy', 'dog', 'cat', 'bear'];
@@ -42,7 +53,7 @@ export const ENGINES: Engine[] = ['hum', 'vroom', 'race'];
 export const ENGINE_SFX: Record<Engine, SfxName> = { hum: 'hum', vroom: 'vroom', race: 'raceEngine' };
 
 export const DEFAULT_SPEC: BuildSpec = {
-  body: 'sedan', color: 'red', color2: 'white', pattern: 'none', wheels: 'normal', rim: 0, number: 0, plate: '',
+  body: 'sedan', color: 'red', color2: 'white', pattern: 'none', wheels: 'normal', rim: 0, rimColor: 'silver', number: 0, plate: '', model: '',
   extras: [], driver: 'none', brand: 'toyota', horn: 'honk', engine: 'vroom',
 };
 
@@ -50,7 +61,7 @@ export const DEFAULT_SPEC: BuildSpec = {
 export const normalizeSpec = (s: Partial<BuildSpec>): BuildSpec => ({ ...DEFAULT_SPEC, ...s, extras: s.extras ?? [] });
 
 /** 🎲 Surprise: a random, fun car. */
-export function randomSpec(rng: Rng, brands: BrandId[], plates: string[]): BuildSpec {
+export function randomSpec(rng: Rng, brands: BrandId[], plates: string[], models: string[] = MODEL_PRESETS): BuildSpec {
   const [color, color2] = sample(rng, PAINTS, 2);
   return {
     body: pick(rng, BODY_OPTIONS),
@@ -58,8 +69,10 @@ export function randomSpec(rng: Rng, brands: BrandId[], plates: string[]): Build
     pattern: pick(rng, PATTERNS),
     wheels: pick(rng, WHEELS),
     rim: pick(rng, RIMS),
+    rimColor: rng() < 0.4 ? 'silver' : pick(rng, RIM_COLORS),
     number: rng() < 0.6 ? int(rng, 1, 9) : 0,
     plate: rng() < 0.5 ? pick(rng, plates) : '',
+    model: rng() < 0.4 && models.length ? pick(rng, models) : '',
     extras: EXTRAS.filter(() => rng() < 0.3),
     driver: pick(rng, DRIVERS),
     brand: pick(rng, brands),

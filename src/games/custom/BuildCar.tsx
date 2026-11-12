@@ -6,8 +6,8 @@ import { CustomCar, DriverIcon, PatternSwatch, WheelIcon } from '../../art/Custo
 import { LogoArt } from '../../art/logos';
 import { BRANDS, BRAND_BY_ID, spoken } from '../../content/brands';
 import {
-  BODY_OPTIONS, DEFAULT_SPEC, DRIVERS, ENGINES, ENGINE_SFX, EXTRAS, HORNS, PAINTS, PATTERNS, RIMS, WHEELS,
-  makeOrder, orderDone, orderProgress, randomSpec, type BuildSpec, type Order,
+  BODY_OPTIONS, DEFAULT_SPEC, DRIVERS, ENGINES, ENGINE_SFX, EXTRAS, HORNS, MODEL_MAX, MODEL_PRESETS, PAINTS, PATTERNS, RIMS, RIM_COLORS, WHEELS,
+  makeOrder, orderDone, orderProgress, randomSpec, rimHex, type BuildSpec, type Order, type RimColor,
 } from '../../content/carParts';
 import { COLORS } from '../../content/colors';
 import { LEVELS } from '../../content/levels';
@@ -23,10 +23,11 @@ import { Dots, TopBar } from '../../ui/TopBar';
 import { plateName } from '../seq/generators';
 import { Reward } from '../Reward';
 
-type Cat = 'type' | 'paint' | 'wheels' | 'pattern' | 'number' | 'plate' | 'extras' | 'driver' | 'logo' | 'sound';
+type Cat = 'type' | 'paint' | 'wheels' | 'rim' | 'pattern' | 'number' | 'plate' | 'model' | 'extras' | 'driver' | 'logo' | 'sound';
 const CATS: { id: Cat; icon: string }[] = [
-  { id: 'type', icon: '🚙' }, { id: 'paint', icon: '🎨' }, { id: 'wheels', icon: '🛞' }, { id: 'pattern', icon: '🔥' }, { id: 'number', icon: '🔢' },
-  { id: 'plate', icon: '🔤' }, { id: 'extras', icon: '🧢' }, { id: 'driver', icon: '🐶' }, { id: 'logo', icon: '⭐' }, { id: 'sound', icon: '📯' },
+  // In pairs: landscape shows 2 per row (wheels | wheel colour, plate | car name…), portrait 6 per row.
+  { id: 'type', icon: '🚙' }, { id: 'paint', icon: '🎨' }, { id: 'wheels', icon: '🛞' }, { id: 'rim', icon: '' }, { id: 'pattern', icon: '🔥' }, { id: 'number', icon: '🔢' },
+  { id: 'plate', icon: '🔤' }, { id: 'model', icon: '🏷️' }, { id: 'extras', icon: '🧢' }, { id: 'driver', icon: '🐶' }, { id: 'logo', icon: '⭐' }, { id: 'sound', icon: '📯' },
 ];
 const HORN_ICON: Partial<Record<SfxName, string>> = { honk: '📢', horn: '🎺', woop: '🚨', beepReverse: '🔔' };
 const ENGINE_ICON = { hum: '🔈', vroom: '🚗', race: '🏎️' } as const;
@@ -44,6 +45,8 @@ export function BuildCar() {
   const cfg = LEVELS.buildCar[levelFor('buildCar')];
   const rng = useRef(makeRng()).current;
   const childName = useStore((s) => s.childName);
+  const modelNames = useStore((s) => s.modelNames);
+  const [typing, setTyping] = useState(false);
   // Free building starts with the child's name on the plate.
   const [spec, setSpec] = useState<BuildSpec>(() => ({ ...DEFAULT_SPEC, plate: cfg.orders ? '' : plateName(childName).length >= 2 ? plateName(childName) : '' }));
   const [cat, setCat] = useState<Cat>('type');
@@ -86,8 +89,18 @@ export function BuildCar() {
     const on = spec.extras.includes(e);
     set('extras', on ? spec.extras.filter((x) => x !== e) : [...spec.extras, e], on ? null : L(`extra.${e}`));
   };
+  const rimLine = (c: RimColor) => (c === 'silver' || c === 'gold' ? L(`rim.${c}`) : L('rim.color', { color: L(`color.${c}`) }));
+  const pickModel = (name: string) => set('model', name, name ? L('model.says', { word: name }) : L('model.none'));
+  /** A grown-up typed a name: put it on the car and keep it in the row for next time. */
+  const saveModel = (raw: string) => {
+    const name = raw.trim().replace(/\s+/g, ' ').slice(0, MODEL_MAX);
+    setTyping(false);
+    if (!name) return;
+    update((s) => ({ modelNames: [name, ...s.modelNames.filter((m) => m.toLowerCase() !== name.toLowerCase())].slice(0, 8) }));
+    pickModel(name);
+  };
   const surprise = () => {
-    setSpec(randomSpec(rng, BRANDS.map((b) => b.id), plates));
+    setSpec(randomSpec(rng, BRANDS.map((b) => b.id), plates, [...modelNames, ...MODEL_PRESETS]));
     setBump((b) => b + 1);
     sfx('splash');
     void say(L('build.surprise'));
@@ -140,8 +153,9 @@ export function BuildCar() {
     wheels: [
       ...WHEELS.map((w) => opt('wheels', w, spec.wheels === w, () => set('wheels', w, L(`wheels.${w}`)), <CustomCar spec={{ ...spec, wheels: w }} className="thing-svg" />, 'car')),
       <i key="d1" className="bdiv" />,
-      ...RIMS.map((r) => opt('rim', r, spec.rim === r, () => set('rim', r), <WheelIcon rim={r} color={COLORS[spec.color2]} />, 'round')),
+      ...RIMS.map((r) => opt('rim', r, spec.rim === r, () => set('rim', r), <WheelIcon rim={r} color={rimHex(spec.rimColor)} />, 'round')),
     ],
+    rim: RIM_COLORS.map((c) => opt('rimColor', c, spec.rimColor === c, () => set('rimColor', c, rimLine(c), 'splash'), <WheelIcon rim={spec.rim} color={rimHex(c)} />, 'round')),
     pattern: [
       ...PATTERNS.map((pt) => opt('pattern', pt, spec.pattern === pt, () => set('pattern', pt, L(`pattern.${pt}`)), <CustomCar spec={{ ...spec, pattern: pt }} className="thing-svg" />, 'car')),
       <i key="d2" className="bdiv" />,
@@ -149,6 +163,12 @@ export function BuildCar() {
     ],
     number: Array.from({ length: 10 }, (_, n) => opt('number', n, spec.number === n, () => set('number', n, n ? L(`num.${n}`) : L('number.none')), <span className="bnum">{n || '–'}</span>, 'round')),
     plate: ['', ...plates].map((pl) => opt('plate', pl || 'none', spec.plate === pl, () => set('plate', pl, pl ? L('plate.says', { word: pl === myPlate && childName ? childName : pl }) : L('plate.none')), <span className="bplate">{pl || '–'}</span>, 'wide')),
+    model: [
+      opt('model', 'none', !spec.model, () => pickModel(''), <span className="bnum">–</span>, 'round'),
+      opt('model', 'type', false, () => { sfx('pop'); setTyping(true); void say(L('model.type')); }, <span className="bemoji">✏️</span>, 'round'),
+      ...[...new Map([...modelNames, ...MODEL_PRESETS].map((m) => [m.toLowerCase(), m])).values()].map((m) =>
+        opt('model', m, spec.model.toLowerCase() === m.toLowerCase(), () => pickModel(m), <span className="bmodel">{m.toUpperCase()}</span>, 'wide')),
+    ],
     extras: EXTRAS.map((e) => opt('extras', e, spec.extras.includes(e), () => toggleExtra(e), <CustomCar spec={{ ...spec, extras: [e], pattern: spec.pattern }} className="thing-svg" />, 'car')),
     driver: DRIVERS.map((d) => opt('driver', d, spec.driver === d, () => set('driver', d, L(`driver.${d}`)), <DriverIcon kind={d} />, 'round')),
     logo: [
@@ -190,7 +210,7 @@ export function BuildCar() {
         <div className="bld-opts" key={cat}>{options[cat]}</div>
         <div className="bld-cats">
           {CATS.map((c) => (
-            <button key={c.id} data-cat={c.id} className={`bcat ${cat === c.id ? 'on' : ''}`} onClick={() => { setCat(c.id); sfx('pop'); void say(L(`cat.${c.id}`)); }} aria-label={c.id}>{c.icon}</button>
+            <button key={c.id} data-cat={c.id} className={`bcat ${cat === c.id ? 'on' : ''}`} onClick={() => { setCat(c.id); sfx('pop'); void say(L(`cat.${c.id}`)); }} aria-label={c.id}>{c.id === 'rim' ? <WheelIcon rim={3} color={rimHex(spec.rimColor === 'silver' ? 'gold' : spec.rimColor)} /> : c.icon}</button>
           ))}
         </div>
       </div>
@@ -200,6 +220,16 @@ export function BuildCar() {
           <div className="ds-road"><i /></div>
           <div className="ds-car"><div className={`ds-hop h${hop % 2}`}><CustomCar spec={spec} className="thing-svg" /></div></div>
         </div>
+      )}
+      {typing && (
+        <form className="bld-type" onSubmit={(e) => { e.preventDefault(); saveModel(new FormData(e.currentTarget).get('model') as string); }}>
+          <div className="bld-type-box pop-in">
+            <span className="bemoji" aria-hidden>🏷️</span>
+            <input name="model" className="bmodel-input" type="text" maxLength={MODEL_MAX} autoFocus autoComplete="off" autoCapitalize="words" enterKeyHint="done" placeholder="Raptor" defaultValue={spec.model} aria-label="Car name" />
+            <button type="submit" className="big-btn go" aria-label="OK">✓</button>
+            <button type="button" className="big-btn" onClick={() => setTyping(false)} aria-label="Cancel">✕</button>
+          </div>
+        </form>
       )}
       {party > 0 && <Confetti key={party} />}
     </div>

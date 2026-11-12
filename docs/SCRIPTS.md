@@ -380,6 +380,14 @@
 | `engine.hum` | quiet engine | động cơ êm |
 | `engine.vroom` | vroom engine | động cơ brừm |
 | `engine.race` | race engine | động cơ xe đua |
+| `cat.rim` | Wheel color | Màu bánh xe |
+| `cat.model` | Car name | Tên xe |
+| `rim.silver` | silver wheels | bánh xe màu bạc |
+| `rim.gold` | gold wheels | bánh xe màu vàng kim |
+| `rim.color` | {color} wheels | bánh xe màu {color} |
+| `model.none` | no name | không có tên |
+| `model.type` | Ask a grown-up to type a name! | Nhờ người lớn gõ tên xe nhé! |
+| `model.says` | Your car is called {word}! | Xe của con tên là {word}! |
 | `number.none` | no number | không có số |
 | `plate.none` | no plate | không biển số |
 | `plate.says` | Your plate says {word}! | Biển số là {word}! |
