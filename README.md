@@ -4,6 +4,8 @@
 
 A car-themed learning game for 3–4 year olds: **numbers, letters, colors, shapes, logic, memory and listening**, told with car brands and construction vehicles. Spoken in **English or Vietnamese**, made for the **iPad**, works **offline**, deploys to **Cloudflare Pages**.
 
+**▶ Play it at [playlittlegarage.org](https://playlittlegarage.org)** — free, no ads, no accounts, no tracking. On iPad or iPhone, open it in Safari and tap Share → Add to Home Screen to play offline.
+
 - 6 zones, **26 playable games** (5 more designed, 4 turned off), 3 adaptive levels each
 - Paint Shop coloring book for every vehicle and brand logo, plus a free **Drawing Board** (pencil, crayon, brush, rainbow, stars, stickers, eraser)
 - Stickers, saved paintings and built cars in "My Garage"
@@ -11,7 +13,7 @@ A car-themed learning game for 3–4 year olds: **numbers, letters, colors, shap
 - Grown-ups settings: tap ⚙️ on the home screen (language, voice speed, levels, hide games, session limit)
 
 ## Screenshots
-On an iPad in landscape. Try it at [little-garage.pages.dev](https://little-garage.pages.dev).
+On an iPad in landscape.
 
 ![Home screen: six zones (Parking Lot, Highway, Paint Shop, Construction Site, Garage, Playground)](assets/screenshots/home.png)
 
