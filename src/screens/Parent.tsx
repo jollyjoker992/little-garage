@@ -122,7 +122,11 @@ export function Parent() {
         <p className="muted">{s.stickers.length} stickers · {s.gallery.length} paintings · {s.cars.length} built cars. Saved on this device only.</p>
         <button className="pbtn danger" onClick={() => { if (window.confirm('Reset all progress, stickers, paintings and drawings?')) { resetProgress(); void clearDrawings(); } }}>Reset progress</button>
       </section>
-      <p className="muted small">Little Garage · no ads, no tracking · MIT licensed</p>
+      <section className="ptrademarks">
+        <h3>Car brands</h3>
+        <p className="muted">Car brand names and logos are trademarks of their owners. Little Garage is a free, non-commercial learning game and is not affiliated with or endorsed by any car maker. The badges are simple kid-style drawings so a child can name the cars they see on the street.</p>
+      </section>
+      <p className="muted small">Little Garage · free, no ads, no tracking · MIT licensed (brand names and logos excluded)</p>
     </div>
   );
 }
