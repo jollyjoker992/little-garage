@@ -5,9 +5,10 @@ import { OUT } from './kit';
 const ink = { stroke: OUT, strokeWidth: 3, strokeLinejoin: 'round' as const };
 
 /** Zip: a small blue tow truck with big eyes in the windshield. viewBox 0 0 210 120, facing right, ground at y≈111. */
-export function ZipArt({ lights, className }: { lights?: boolean; className?: string }) {
+/** `align`: 'ground' keeps the wheels on the bottom edge (on a road); 'center' centres him (icons, like other vehicles). */
+export function ZipArt({ lights, className, align = 'ground' }: { lights?: boolean; className?: string; align?: 'ground' | 'center' }) {
   return (
-    <svg viewBox="0 0 210 120" className={className ?? 'thing-svg'} preserveAspectRatio="xMidYMax meet">
+    <svg viewBox="0 0 210 120" className={className ?? 'thing-svg'} preserveAspectRatio={align === 'center' ? 'xMidYMid meet' : 'xMidYMax meet'}>
       {lights && <path d="M190 64 L210 50 L210 92 L190 80 Z" fill="#fff59d" opacity=".85" />}
       {/* boom + hook */}
       <path d="M44 62 L20 22" stroke={OUT} strokeWidth="11" strokeLinecap="round" />

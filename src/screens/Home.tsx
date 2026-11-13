@@ -7,9 +7,11 @@ import { justWelcomed, say } from '../engine/speech';
 import { sfx } from '../engine/sound';
 import { useStore } from '../engine/store';
 import { ThingView } from '../ui/ThingView';
+import { useUi } from '../ui/useUi';
 
 export function Home() {
   const lang = useStore((s) => s.lang);
+  const u = useUi();
   useStore((s) => s.childName); // re-render when the name changes
   const title = t(lang, L('app.title')); // "King's Garage" when a name is set
   const full = useFullscreen();
@@ -44,7 +46,7 @@ export function Home() {
       </header>
       {tip && (
         <div className="fs-tip" role="status" onClick={() => setTip(false)}>
-          On iPhone, tap <b>Share</b> <span aria-hidden>⬆️</span> → <b>Add to Home Screen</b>, then open Little Garage from the home screen to play full screen.
+          {u('h.fsTip1')} <b>{u('h.fsShare')}</b> <span aria-hidden>⬆️</span> → <b>{u('h.fsAdd')}</b>{u('h.fsTip2')}
         </div>
       )}
       <div className="zone-grid">

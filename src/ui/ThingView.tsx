@@ -173,7 +173,7 @@ export function ThingView({ thing, fit = 'ground' }: { thing: Thing; fit?: 'grou
     case 'word': return <Word text={thing.text} k={thing.k} />;
     case 'dots': return <Dots n={thing.n} />;
     case 'mystery': return <Sign text="?" bg="#e1f5fe" color="#1e88e5" round />;
-    case 'zip': return <div className={`thing-vehicle ${fit}`}><ZipArt lights={thing.lights} /></div>;
+    case 'zip': return <div className={`thing-vehicle ${fit}`}><ZipArt lights={thing.lights} align={fit} /></div>;
     case 'action': return <ActionIcon a={thing.a} />;
     case 'speaker':
       return (
