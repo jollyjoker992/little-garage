@@ -11,16 +11,17 @@ import { sfx, wait } from '../../engine/sound';
 import { Confetti } from '../../ui/Confetti';
 import { Dots, TopBar } from '../../ui/TopBar';
 import { Reward } from '../Reward';
-import { BRAND_BY_ID, spoken, type BrandId } from '../../content/brands';
+import type { BrandId } from '../../content/brands';
+import { brandLine } from '../../engine/brandSay';
 import type { Line } from '../../engine/i18n';
 import { PAINT_PAGES } from './PaintShop';
 
 const BACK = '#/zone/logic';
-/** The picture's name to put in "It's {name}!" (no extra punctuation). */
-function artWord(page: string): string | Line {
+/** What is said when the picture is finished: "Là xe buýt!", or a brand on its own in English ("Toyota!"). */
+function artDone(page: string): Line {
   const [kind, id] = page.split(':');
-  if (kind === 'l') return spoken(BRAND_BY_ID[id as BrandId]);
-  return L(kind === 'c' ? `body.${id}` : `v.${id}`);
+  if (kind === 'l') return brandLine(id as BrandId);
+  return L('p.puzzle.done', { name: L(kind === 'c' ? `body.${id}` : `v.${id}`) });
 }
 type Piece = { id: string; r: number; c: number };
 
@@ -83,7 +84,7 @@ export function Puzzle() {
       sfx('fanfare');
       setParty((x) => x + 1);
       const change = recordRound('roadPuzzle', mistakes === 0);
-      await say([L('p.puzzle.done', { name: artWord(art) }), L('cheer'), change === 'up' && L('levelUp')]);
+      await say([artDone(art), L('cheer'), change === 'up' && L('levelUp')]);
       await wait(700);
       if (!alive.current) return;
       setPlaced([]);

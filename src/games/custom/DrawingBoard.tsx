@@ -6,7 +6,8 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, type Pointer
 import { renderToStaticMarkup } from 'react-dom/server';
 import { back } from '../../app/router';
 import { ArtById } from '../../art/ArtById';
-import { BRAND_BY_ID, spoken, type BrandId } from '../../content/brands';
+import type { BrandId } from '../../content/brands';
+import { brandLine } from '../../engine/brandSay';
 import { COLORS, COLOR_IDS, type ColorId } from '../../content/colors';
 import { BASE_SIZE, SIZE_MUL, StrokePainter, TOOLS, TOOL_ICON, paintStroke, type Pt, type SizeName, type Stroke, type Surface, type Tool } from '../../engine/brushes';
 import { getDrawing, saveDrawing } from '../../engine/drawings';
@@ -55,7 +56,7 @@ function loadStamps() {
 
 export function stampName(p: string): Line {
   const [kind, id] = p.split(':');
-  if (kind === 'l') return L('say.value', { value: spoken(BRAND_BY_ID[id as BrandId]) });
+  if (kind === 'l') return brandLine(id as BrandId);
   if (kind === 'c') return L(`body.${id}`);
   return L(`v.${id}`);
 }

@@ -4,7 +4,7 @@ import { ArtById } from '../art/ArtById';
 import { VehicleArt } from '../art/vehicles';
 import { CustomCar } from '../art/CustomCar';
 import { normalizeSpec } from '../content/carParts';
-import { BRAND_BY_ID, spoken } from '../content/brands';
+import { brandLine } from '../engine/brandSay';
 import { COLORS } from '../content/colors';
 import { L } from '../engine/i18n';
 import { say, stopSpeech } from '../engine/speech';
@@ -80,7 +80,7 @@ export function Garage() {
               sfx(car.horn);
               const el = e.currentTarget.firstElementChild as HTMLElement | null;
               el?.classList.remove('zoom'); void el?.getBoundingClientRect(); el?.classList.add('zoom');
-              void say([800, car.brand ? L('say.value', { value: spoken(BRAND_BY_ID[car.brand]) }) : L(`body.${car.body}`)]);
+              void say([800, car.brand ? brandLine(car.brand) : L(`body.${car.body}`)]);
             }}>
               <div className="garage-car"><CustomCar spec={car} className="thing-svg" /></div>
             </button>

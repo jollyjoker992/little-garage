@@ -104,7 +104,7 @@ export const vi: Record<string, string | string[]> = {
   'game.readBrand.intro': 'Mình cùng đọc tên xe nào! Tìm chữ đúng với logo nhé.',
   'game.sorting': 'Gara phân loại',
   'game.sorting.intro': 'Mỗi loại xe có gara riêng. Đỗ xe vào đúng gara nhé!',
-  'p.read.find': 'Tìm chữ {name} nào!',
+  'p.read.find': 'Con tìm chữ này nhé:',
   'p.sort.color': 'Đỗ xe vào gara cùng màu nhé!',
   'p.sort.group': 'Xe này vào gara nào?',
   'say.sorted': '{vehicle} vào gara {group}!',
@@ -133,9 +133,9 @@ export const vi: Record<string, string | string[]> = {
 
   'game.sizeOrder': 'Đỗ xe theo cỡ',
   'game.sizeOrder.intro': 'Đỗ các xe theo thứ tự to nhỏ nhé!',
-  'p.plate.make': 'Mình làm biển số {word} nào!',
+  'p.plate.make': 'Mình làm biển số này nào:',
   'p.plate.find': 'Tìm chữ {letter} nào!',
-  'p.plate.done': '{word}! Con làm xong biển số rồi!',
+  'p.plate.done': 'Con làm xong biển số rồi!',
   'p.plate.name.kid': 'Mình làm biển số tên của con nào, {kid}!',
   'p.plate.nameDone.kid': '{kid}! Tên của con đó! Con làm xong biển số rồi!',
   'p.size.order': 'Đỗ xe từ nhỏ nhất đến to nhất nhé!',
@@ -170,9 +170,9 @@ export const vi: Record<string, string | string[]> = {
   'p.dock.fewer': ['Xe ben nào chở ít đá hơn?', 'Tìm xe ben có ít đá hơn nào!', 'Xe nào chở ít đá hơn nhỉ?'],
   'p.dock.add': ['Tất cả có bao nhiêu viên đá?', 'Đếm hết đá nào! Có bao nhiêu viên?'],
   'p.letter.find': 'Tìm xe có chữ {letter} nào!',
-  'p.brandLetter.toLetter': '{name} bắt đầu bằng... chữ gì nhỉ?',
+  'p.brandLetter.toLetter': 'Tên này bắt đầu bằng chữ gì nhỉ?',
   'p.brandLetter.toBrand': 'Cái nào bắt đầu bằng chữ {letter}?',
-  'p.brandLetter.says': '{name} bắt đầu bằng chữ {letter}!',
+  'p.brandLetter.says': 'Bắt đầu bằng chữ {letter}!',
   'p.abc.next': 'Chữ nào tiếp theo?',
   'p.abc.missing': 'Chữ nào bị thiếu?',
   'p.wash.find': 'Chạm vào xe màu {color}!',
@@ -260,7 +260,7 @@ export const vi: Record<string, string | string[]> = {
   'cat.rim': 'Màu bánh xe', 'cat.model': 'Tên xe',
   'rim.silver': 'bánh xe màu bạc', 'rim.gold': 'bánh xe màu vàng kim', 'rim.color': 'bánh xe màu {color}',
   'model.none': 'không có tên', 'model.type': 'Nhờ người lớn gõ tên xe nhé!', 'model.says': 'Xe của con tên là {word}!',
-  'number.none': 'không có số', 'plate.none': 'không biển số', 'plate.says': 'Biển số là {word}!', 'logo.none': 'không logo',
+  'number.none': 'không có số', 'plate.none': 'không biển số', 'plate.says': 'Biển số là:', 'plate.says.kid': 'Biển số là {kid}!', 'logo.none': 'không logo',
   'build.surprise': 'Bất ngờ! Một chiếc xe mới toanh!',
   'build.drive': 'Lái thử nào! Chạm để bóp còi!',
   'build.parked': 'Xe đã vào gara của con!',
@@ -285,7 +285,7 @@ export const vi: Record<string, string | string[]> = {
   'traffic.ask.yellow': 'Cho xe đi chậm lại nào!',
 
   // ── Logo Match ──
-  'memory.match': '{name}! Đúng cặp rồi!',
+  'memory.match': 'Đúng cặp rồi!',
 
   // ── English Street (docs/ENGLISH_ZONE.md) ──
   // Only the taught words are always English (taught.ts). Everything here is in the app language.

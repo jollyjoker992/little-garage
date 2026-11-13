@@ -4,7 +4,8 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { CustomCar, DriverIcon, PatternSwatch, WheelIcon } from '../../art/CustomCar';
 import { LogoArt } from '../../art/logos';
-import { BRANDS, BRAND_BY_ID, spoken } from '../../content/brands';
+import { BRANDS, BRAND_BY_ID } from '../../content/brands';
+import { brandLine, plateLine } from '../../engine/brandSay';
 import {
   BODY_OPTIONS, DEFAULT_SPEC, DRIVERS, ENGINES, ENGINE_SFX, EXTRAS, HORNS, MODEL_MAX, MODEL_PRESETS, PAINTS, PATTERNS, RIMS, RIM_COLORS, WHEELS,
   makeOrder, orderDone, orderProgress, randomSpec, rimHex, type BuildSpec, type Order, type RimColor,
@@ -79,7 +80,7 @@ export function BuildCar() {
     matched.current = ok;
   }, [spec, order]);
 
-  const set = <K extends keyof BuildSpec>(k: K, v: BuildSpec[K], line?: Line | null, sound: SfxName = 'pop') => {
+  const set = <K extends keyof BuildSpec>(k: K, v: BuildSpec[K], line?: Line | Line[] | null, sound: SfxName = 'pop') => {
     setSpec((s) => ({ ...s, [k]: v }));
     setBump((b) => b + 1);
     sfx(sound);
@@ -162,7 +163,7 @@ export function BuildCar() {
       ...PAINTS.map((c) => pot('color2', c)),
     ],
     number: Array.from({ length: 10 }, (_, n) => opt('number', n, spec.number === n, () => set('number', n, n ? L(`num.${n}`) : L('number.none')), <span className="bnum">{n || '–'}</span>, 'round')),
-    plate: ['', ...plates].map((pl) => opt('plate', pl || 'none', spec.plate === pl, () => set('plate', pl, pl ? L('plate.says', { word: pl === myPlate && childName ? childName : pl }) : L('plate.none')), <span className="bplate">{pl || '–'}</span>, 'wide')),
+    plate: ['', ...plates].map((pl) => opt('plate', pl || 'none', spec.plate === pl, () => set('plate', pl, pl ? (pl === myPlate && childName ? L('plate.says.kid') : [L('plate.says'), plateLine(pl)]) : L('plate.none')), <span className="bplate">{pl || '–'}</span>, 'wide')),
     model: [
       opt('model', 'none', !spec.model, () => pickModel(''), <span className="bnum">–</span>, 'round'),
       opt('model', 'type', false, () => { sfx('pop'); setTyping(true); void say(L('model.type')); }, <span className="bemoji">✏️</span>, 'round'),
@@ -173,7 +174,7 @@ export function BuildCar() {
     driver: DRIVERS.map((d) => opt('driver', d, spec.driver === d, () => set('driver', d, L(`driver.${d}`)), <DriverIcon kind={d} />, 'round')),
     logo: [
       opt('brand', 'none', spec.brand === null, () => set('brand', null, L('logo.none')), <span className="bnum">–</span>, 'round'),
-      ...BRANDS.map((b) => opt('brand', b.id, spec.brand === b.id, () => set('brand', b.id, L('say.value', { value: spoken(b) })), <LogoArt brand={b.id} />, 'round')),
+      ...BRANDS.map((b) => opt('brand', b.id, spec.brand === b.id, () => set('brand', b.id, brandLine(b)), <LogoArt brand={b.id} />, 'round')),
     ],
     sound: [
       ...HORNS.map((h) => opt('horn', h, spec.horn === h, () => set('horn', h, null, h), <span className="bemoji">{HORN_ICON[h]}</span>, 'round')),

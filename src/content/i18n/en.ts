@@ -108,7 +108,7 @@ export const en: Record<string, string | string[]> = {
   'game.readBrand.intro': "Let's read car names! Find the word that matches the logo.",
   'game.sorting': 'Sorting Garage',
   'game.sorting.intro': 'Every vehicle has its own garage. Park them in the right one!',
-  'p.read.find': 'Find the word {name}!',
+  'p.read.find': 'Find this word:',
   'p.sort.color': 'Park it in the garage with the same color!',
   'p.sort.group': 'Which garage does it go in?',
   'say.sorted': 'The {vehicle} goes in the {group} garage!',
@@ -137,9 +137,9 @@ export const en: Record<string, string | string[]> = {
 
   'game.sizeOrder': 'Size Parking',
   'game.sizeOrder.intro': 'Park the vehicles in order of size!',
-  'p.plate.make': "Let's make the plate {word}!",
+  'p.plate.make': "Let's make this plate:",
   'p.plate.find': 'Find the letter {letter}!',
-  'p.plate.done': '{word}! You made the plate!',
+  'p.plate.done': 'You made the plate!',
   'p.plate.name.kid': "Let's make a plate with your name, {kid}!",
   'p.plate.nameDone.kid': "{kid}! That's your name! You made the plate!",
   'p.size.order': 'Park them from the smallest to the biggest!',
@@ -174,9 +174,9 @@ export const en: Record<string, string | string[]> = {
   'p.dock.fewer': ['Which truck has fewer rocks?', 'Find the truck with fewer rocks!', 'Which dump truck is carrying less?'],
   'p.dock.add': ['How many rocks are there altogether?', 'Count all the rocks! How many?'],
   'p.letter.find': 'Find the car with the letter {letter}!',
-  'p.brandLetter.toLetter': '{name} starts with... which letter?',
+  'p.brandLetter.toLetter': 'Which letter does it start with?',
   'p.brandLetter.toBrand': 'Which one starts with {letter}?',
-  'p.brandLetter.says': '{name} starts with {letter}!',
+  'p.brandLetter.says': 'It starts with {letter}!',
   'p.abc.next': 'Which letter comes next?',
   'p.abc.missing': 'Which letter is missing?',
   'p.wash.find': 'Tap the {color} car!',
@@ -264,7 +264,7 @@ export const en: Record<string, string | string[]> = {
   'cat.rim': 'Wheel color', 'cat.model': 'Car name',
   'rim.silver': 'silver wheels', 'rim.gold': 'gold wheels', 'rim.color': '{color} wheels',
   'model.none': 'no name', 'model.type': 'Ask a grown-up to type a name!', 'model.says': 'Your car is called {word}!',
-  'number.none': 'no number', 'plate.none': 'no plate', 'plate.says': 'Your plate says {word}!', 'logo.none': 'no logo',
+  'number.none': 'no number', 'plate.none': 'no plate', 'plate.says': 'Your plate says:', 'plate.says.kid': 'Your plate says {kid}!', 'logo.none': 'no logo',
   'build.surprise': 'Surprise! A brand new car!',
   'build.drive': 'Test drive! Tap to honk!',
   'build.parked': 'Parked in your garage!',
@@ -289,7 +289,7 @@ export const en: Record<string, string | string[]> = {
   'traffic.ask.yellow': 'Make the car go slowly!',
 
   // ── Logo Match ──
-  'memory.match': '{name}! A match!',
+  'memory.match': 'A match!',
 
   // ── English Street (docs/ENGLISH_ZONE.md) ──
   // Only the taught words are always English (taught.ts). Everything here is in the app language.

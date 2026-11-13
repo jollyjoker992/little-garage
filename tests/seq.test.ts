@@ -19,7 +19,7 @@ describe.each(Object.keys(SEQ_GENERATORS))('%s', (id) => {
           for (const k of r.order) counts[k] = (counts[k] ?? 0) - 1;
           expect(Object.values(counts).every((c) => c >= 0), `seed ${seed}`).toBe(true);
           expect(new Set(r.pool.map((p) => p.id)).size).toBe(r.pool.length);
-          const lines = [r.prompt, r.done, ...r.order.flatMap((_, i) => [r.sayItem(i), r.hint(i)])];
+          const lines = [...[r.prompt].flat(), ...[r.done].flat(), ...r.order.flatMap((_, i) => [r.sayItem(i), r.hint(i)])];
           for (const l of lines) for (const k of lineKeys(l)) expect(hasKey(k), k).toBe(true);
         }
       });
@@ -41,11 +41,11 @@ describe('rules', () => {
         const r = SEQ_GENERATORS.licensePlates(cfg, makeRng(idx), { lang: 'vi', level: lv, childName: 'Bảo', idx });
         const named = lv > 1 && idx === rounds - 1;
         expect(r.order.join('') === 'BAO', `L${lv} round ${idx}`).toBe(named);
-        expect(r.prompt.key, `L${lv} round ${idx}`).toBe(named ? 'p.plate.name.kid' : 'p.plate.make');
+        expect([r.prompt].flat()[0].key, `L${lv} round ${idx}`).toBe(named ? 'p.plate.name.kid' : 'p.plate.make');
       }
     }
     const r = SEQ_GENERATORS.licensePlates(LEVELS.licensePlates[3], makeRng(1), { lang: 'vi', level: 3, childName: '', idx: 3 });
-    expect(r.prompt.key).toBe('p.plate.make');
+    expect([r.prompt].flat()[0].key).toBe('p.plate.make');
   });
   it('size parking: small → big (L1, L2), big → small (L3)', () => {
     for (const lv of [1, 2, 3] as Level[]) {

@@ -5,7 +5,7 @@ import type { Level } from '../../content/levels';
 
 /** One "tap them in the right order" puzzle (License Plate, Size Parking). */
 export type SeqRound = {
-  prompt: Line;
+  prompt: Line | Line[];
   /** Shown above the slots: the plate to copy. */
   model?: string;
   layout: 'plate' | 'parking';
@@ -14,7 +14,7 @@ export type SeqRound = {
   order: string[];
   sayItem: (step: number) => Line;
   hint: (step: number) => Line;
-  done: Line;
+  done: Line | Line[];
 };
 
 /** idx = which round of the game this is (0-based). */

@@ -24,6 +24,8 @@ He can't read, so **every instruction is spoken** (English or Vietnamese; switch
 11. **Full screen.** Tapping ▶ also goes full screen (browsers only allow it right after a tap); the ⛶ button on the home screen toggles it. iPhone Safari can't make pages full screen, so there the button explains *Add to Home Screen*; the button is hidden when the app is already opened from the home screen.
 12. **His name.** When a name is set in Grown-ups settings, the voice uses it (hello and bye, about half the cheers, a gentle "Almost, King!", level up, stickers, the Build a Car customers), the title becomes "King's Garage" / "Gara của King", Build a Car starts with his name on the plate, the last License Plate (L2, L3) spells it, and round 2 of Letter Highway asks for its first letter ("K is for King!"). Without a name everything stays generic.
 
+13. **Car brands are always said in English**, whatever the language setting, and always on their own: *"Toyota!"* (English voice), then *"Đúng cặp rồi!"* — never inside a Vietnamese sentence. Plate words (FORD, BUS, ZOOM…) follow the same rule; the child's own name on a plate stays in the chosen language. (`src/engine/brandSay.ts`)
+
 ## Map: 7 zones
 | Zone | Teaches | Background |
 |---|---|---|

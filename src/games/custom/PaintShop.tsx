@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState, type PointerEvent } from 'react';
 import { echoColor } from '../../engine/echo';
 import { ArtById } from '../../art/ArtById';
 import { defaultsFor, type Fills } from '../../art/defaults';
-import { BRANDS, BRAND_BY_ID, spoken, type BrandId } from '../../content/brands';
+import { BRANDS, type BrandId } from '../../content/brands';
+import { brandLine } from '../../engine/brandSay';
 import { COLORS, COLOR_IDS, colorIdOf, MIXES, type ColorId } from '../../content/colors';
 import { LEVELS } from '../../content/levels';
 import { CAR_BODIES, VEHICLE_IDS } from '../../content/vehicles';
@@ -27,7 +28,7 @@ const BASIC_POTS: ColorId[] = ['red', 'orange', 'yellow', 'green', 'blue', 'purp
 /** Spoken name of a page: the brand name for logos (e.g. "Toyota!"), nothing for other pages. */
 export const pageName = (art: string) => {
   const [kind, id] = art.split(':');
-  return kind === 'l' ? L('say.value', { value: spoken(BRAND_BY_ID[id as BrandId]) }) : null;
+  return kind === 'l' ? brandLine(id as BrandId) : null;
 };
 
 /** Logo pages always show the small finished logo as a guide; other pages from Level 2. */

@@ -20,6 +20,8 @@ export type Round = {
   answer: string;
   /** Spoken when the answer is found (before the cheer). */
   answerSay?: Line;
+  /** More lines right after answerSay (a brand name in English, then its letter in the app language). */
+  answerMore?: Line[];
   /** The scene changes before the question (memory / story games). Choices wait until it's done. */
   stage?: Stage;
   // ── English Street rounds ──

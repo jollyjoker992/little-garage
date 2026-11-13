@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { BRANDS, spoken, type Brand } from '../../content/brands';
+import { BRANDS, type Brand } from '../../content/brands';
+import { brandLine } from '../../engine/brandSay';
 import { LEVELS } from '../../content/levels';
 import type { Thing } from '../../content/things';
 import { levelFor, recordRound } from '../../engine/adaptive';
@@ -44,7 +45,7 @@ export function BrandMemory() {
     const now = [...open, c.id];
     setOpen(now);
     if (now.length < 2) {
-      void say(L('say.value', { value: spoken(c.brand) }));
+      void say(brandLine(c.brand));
       return;
     }
     const [a, b] = now.map((id) => cards.find((x) => x.id === id)!);
@@ -56,7 +57,7 @@ export function BrandMemory() {
       setMatched(m);
       setOpen([]);
       busy.current = false;
-      await say(L('memory.match', { name: spoken(a.brand) }));
+      await say([brandLine(a.brand), L('memory.match')]);
       if (m.length === cards.length) {
         recordRound('brandMemory', mistakes.current <= cfg.pairs);
         await say(L('cheer'));
@@ -64,7 +65,7 @@ export function BrandMemory() {
       }
     } else {
       mistakes.current++;
-      void say(L('say.value', { value: spoken(c.brand) }));
+      void say(brandLine(c.brand));
       await wait(1100);
       sfx('wobble');
       setOpen([]);

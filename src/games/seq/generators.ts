@@ -1,4 +1,5 @@
 import { L } from '../../engine/i18n';
+import { plateLine } from '../../engine/brandSay';
 import { pick, sample, shuffle } from '../../engine/rng';
 import { DEFAULT_ROUNDS, type PlateCfg, type SizeOrderCfg } from '../../content/levels';
 import type { Thing } from '../../content/things';
@@ -23,14 +24,15 @@ export const licensePlate: SeqGenerator<PlateCfg> = (cfg, rng, ctx) => {
   const extras = sample(rng, ALPHA.filter((c) => !letters.includes(c)), cfg.extras);
   const pool = shuffle(rng, [...letters, ...extras].map((ch, i) => ({ id: `t${i}`, key: ch, thing: { t: 'letter', ch } as Thing })));
   return {
-    prompt: mine ? L('p.plate.name.kid') : L('p.plate.make', { word }),
+    // The plate word (a brand, or an English word like BUS) is said on its own in English.
+    prompt: mine ? L('p.plate.name.kid') : [L('p.plate.make'), plateLine(word)],
     model: word,
     layout: 'plate',
     pool,
     order: letters,
     sayItem: (i) => L('say.value', { value: letters[i] }),
     hint: (i) => L('p.plate.find', { letter: letters[i] }),
-    done: mine ? L('p.plate.nameDone.kid') : L('p.plate.done', { word }),
+    done: mine ? L('p.plate.nameDone.kid') : [plateLine(word), L('p.plate.done')],
   };
 };
 

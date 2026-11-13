@@ -41,7 +41,7 @@ export function SequenceGame({ gameId }: { gameId: string }) {
     return () => { alive.current = false; stopSpeech(); };
   }, []);
   useEffect(() => {
-    void say([idx === 0 && L(`game.${gameId}.intro`), r.prompt]);
+    void say([idx === 0 && L(`game.${gameId}.intro`), ...[r.prompt].flat()]);
   }, [r, idx, gameId]);
 
   const step = placed.length;
@@ -71,7 +71,7 @@ export function SequenceGame({ gameId }: { gameId: string }) {
     sfx('ding');
     setParty((x) => x + 1);
     const change = recordRound(gameId, roundMisses === 0);
-    await say([r.sayItem(step), r.done, L('cheer'), change === 'up' && { sfx: 'fanfare' }, change === 'up' && L('levelUp')]);
+    await say([r.sayItem(step), ...[r.done].flat(), L('cheer'), change === 'up' && { sfx: 'fanfare' }, change === 'up' && L('levelUp')]);
     await wait(500);
     if (!alive.current) return;
     busy.current = false;

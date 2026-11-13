@@ -141,7 +141,7 @@ export function ChoiceGame({ gameId, cfg: stopCfg, back: backTo, onDone }: { gam
       const ans = r.choices.find((c) => c.id === r.answer)?.thing;
       const mate = !eng ? [] : streak.current === 3 ? mateSay('streak') : mateSay('right');
       await say([
-        r.answerSay, ...(eng ? [] : echoThing(ans)), r.answerSfx && { sfx: r.answerSfx },
+        r.answerSay, ...(r.answerMore ?? []), ...(eng ? [] : echoThing(ans)), r.answerSfx && { sfx: r.answerSfx },
         ...mate, r.cheer ?? L('cheer'),
         change === 'up' && { sfx: 'fanfare' }, change === 'up' && L('levelUp'), ...(change === 'up' && eng ? mateSay('levelUp') : []),
       ]);
@@ -160,7 +160,7 @@ export function ChoiceGame({ gameId, cfg: stopCfg, back: backTo, onDone }: { gam
       if (!eng) recordRound(gameId, false);
       recordWords(false);
       streak.current = 0;
-      await say([L('reveal'), r.answerSay, r.answerSfx && { sfx: r.answerSfx }]);
+      await say([L('reveal'), r.answerSay, ...(r.answerMore ?? []), r.answerSfx && { sfx: r.answerSfx }]);
       await wait(700);
       next();
     } else {

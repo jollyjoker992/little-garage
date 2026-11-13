@@ -145,7 +145,7 @@
 | `p.puzzle.go` | Move each piece to its place! | Đưa từng mảnh vào đúng chỗ nhé! |
 | `p.puzzle.again` | Not there. Try another spot! | Chưa đúng chỗ. Thử chỗ khác nhé! |
 | `p.puzzle.done` | It's {name}! | Là {name}! |
-| `p.read.find` | Find the word {name}! | Tìm chữ {name} nào! |
+| `p.read.find` | Find this word: | Con tìm chữ này nhé: |
 | `p.sort.color` | Park it in the garage with the same color! | Đỗ xe vào gara cùng màu nhé! |
 | `p.sort.group` | Which garage does it go in? | Xe này vào gara nào? |
 | `say.sorted` | The {vehicle} goes in the {group} garage! | {vehicle} vào gara {group}! |
@@ -161,9 +161,9 @@
 | `p.story.arrive1` | One more car arrives! | Thêm một xe nữa đến! |
 | `p.story.arriveN` | {k} more cars arrive! | Thêm {k} xe nữa đến! |
 | `p.story.ask` | How many cars are there now? | Bây giờ có bao nhiêu xe? |
-| `p.plate.make` | Let's make the plate {word}! | Mình làm biển số {word} nào! |
+| `p.plate.make` | Let's make this plate: | Mình làm biển số này nào: |
 | `p.plate.find` | Find the letter {letter}! | Tìm chữ {letter} nào! |
-| `p.plate.done` | {word}! You made the plate! | {word}! Con làm xong biển số rồi! |
+| `p.plate.done` | You made the plate! | Con làm xong biển số rồi! |
 | `p.plate.name.kid` | Let's make a plate with your name, {kid}! | Mình làm biển số tên của con nào, {kid}! |
 | `p.plate.nameDone.kid` | {kid}! That's your name! You made the plate! | {kid}! Tên của con đó! Con làm xong biển số rồi! |
 | `p.size.order` | Park them from the smallest to the biggest! | Đỗ xe từ nhỏ nhất đến to nhất nhé! |
@@ -190,9 +190,9 @@
 | `p.dock.fewer` | • Which truck has fewer rocks?<br>• Find the truck with fewer rocks!<br>• Which dump truck is carrying less? | • Xe ben nào chở ít đá hơn?<br>• Tìm xe ben có ít đá hơn nào!<br>• Xe nào chở ít đá hơn nhỉ? |
 | `p.dock.add` | • How many rocks are there altogether?<br>• Count all the rocks! How many? | • Tất cả có bao nhiêu viên đá?<br>• Đếm hết đá nào! Có bao nhiêu viên? |
 | `p.letter.find` | Find the car with the letter {letter}! | Tìm xe có chữ {letter} nào! |
-| `p.brandLetter.toLetter` | {name} starts with... which letter? | {name} bắt đầu bằng... chữ gì nhỉ? |
+| `p.brandLetter.toLetter` | Which letter does it start with? | Tên này bắt đầu bằng chữ gì nhỉ? |
 | `p.brandLetter.toBrand` | Which one starts with {letter}? | Cái nào bắt đầu bằng chữ {letter}? |
-| `p.brandLetter.says` | {name} starts with {letter}! | {name} bắt đầu bằng chữ {letter}! |
+| `p.brandLetter.says` | It starts with {letter}! | Bắt đầu bằng chữ {letter}! |
 | `p.abc.next` | Which letter comes next? | Chữ nào tiếp theo? |
 | `p.abc.missing` | Which letter is missing? | Chữ nào bị thiếu? |
 | `p.wash.find` | Tap the {color} car! | Chạm vào xe màu {color}! |
@@ -350,7 +350,7 @@
 
 | Key | English | Tiếng Việt |
 |---|---|---|
-| `memory.match` | {name}! A match! | {name}! Đúng cặp rồi! |
+| `memory.match` | A match! | Đúng cặp rồi! |
 
 ## English Street: taught words (the only lines always said in English)
 
@@ -507,7 +507,8 @@
 | `model.says` | Your car is called {word}! | Xe của con tên là {word}! |
 | `number.none` | no number | không có số |
 | `plate.none` | no plate | không biển số |
-| `plate.says` | Your plate says {word}! | Biển số là {word}! |
+| `plate.says` | Your plate says: | Biển số là: |
+| `plate.says.kid` | Your plate says {kid}! | Biển số là {kid}! |
 | `logo.none` | no logo | không logo |
 | `order.make` | Please build me a {color} {body}! | Làm giúp mình một chiếc {body} màu {color} nhé! |
 | `order.make.kid` | • Please build me a {color} {body}!<br>• Hi {kid}! Please build me a {color} {body}! | • Làm giúp mình một chiếc {body} màu {color} nhé!<br>• Chào {kid}! Làm giúp mình một chiếc {body} màu {color} nhé! |
