@@ -74,6 +74,11 @@ Every picture fits its box: SVGs are `width/height: 100%` with viewBox "meet". V
 ## Speech
 `say([L('tryAgain'), L('hint'), { sfx: 'siren' }, 500, prompt])` plays the steps in order. Any new `say()` cancels the previous one, so taps always interrupt cleanly. Voice: Web Speech API (`en-US` / `vi-VN`; iPad has "Samantha" and "Linh"). If `public/audio/manifest.json` lists `"<lang>/<key>"`, that mp3 plays instead.
 
+iOS Safari quirks the engine works around (`tests/speech.test.ts` acts them out):
+- **Speech needs a tap.** iOS ignores `speak()` until it has been called inside a tap, and may ask again after the app was in the background. Until a line has really started, every tap that doesn't start speech itself speaks a silent, empty line (`unlockSpeech`).
+- **Lines that never start.** iOS can leave a line in its queue that never ends, and every later line then waits behind it in silence. A line that hasn't started after `START_MS` (3 s) is retried once after `cancel()`, then skipped. Anything left in the queue is cleared before the next line.
+- **Lines that never end.** `onend` sometimes never fires. A started line gets 2.5 s plus 160 ms per character ÷ speed, then the sequence goes on.
+
 ## Drawing Board
 A canvas (scaled for devicePixelRatio, max 2) under an outline layer (`ArtById` with every region `transparent`, `pointer-events: none`). Each finger is its own stroke (pointer events + coalesced events). Strokes are kept as data (`Stroke`: tool, color, size, seed, normalized points), so **undo** and **rotation** just replay them. The crayon texture and star colors come from the stroke's seed, so a replay looks exactly the same. Stickers are the regular drawings rendered to images through same-origin blob URLs, which never taint the canvas. Saving stores the paint layer as a PNG (so it can be reopened and drawn on) and a 640px JPEG thumbnail with the outline baked in, all in IndexedDB. The board auto-saves when it closes.
 
