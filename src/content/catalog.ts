@@ -1,6 +1,6 @@
 import type { Thing } from './things';
 
-export type ZoneId = 'numbers' | 'letters' | 'colors' | 'logic' | 'garage' | 'play';
+export type ZoneId = 'numbers' | 'letters' | 'colors' | 'logic' | 'garage' | 'play' | 'english';
 
 export type Zone = { id: ZoneId; icon: Thing; bg: string };
 
@@ -12,6 +12,7 @@ export const ZONES: Zone[] = [
   { id: 'logic', icon: { t: 'vehicle', v: 'excavator' }, bg: '#ffcc80' },
   { id: 'garage', icon: { t: 'vehicle', v: 'fireTruck' }, bg: '#b0bec5' },
   { id: 'play', icon: { t: 'vehicle', v: 'car', color: 'green', body: 'suv' }, bg: '#a5d6a7' },
+  { id: 'english', icon: { t: 'zip' }, bg: '#d1c4e9' },
 ];
 
 /** ready = playable · planned = designed, not built · off = built but switched off (set back to 'ready' to bring it back). */
@@ -70,6 +71,8 @@ export const GAMES: GameEntry[] = [
   // Playground — free play
   { id: 'buildCar', zones: ['play'], status: 'ready', icon: { t: 'vehicle', v: 'car', color: 'orange', body: 'pickup', brand: 'ford' }, about: 'Pick body, color, logo and horn; the car joins My Garage.' },
   { id: 'traffic', zones: ['play'], status: 'ready', icon: { t: 'icon', icon: 'trafficLight' }, about: 'Red stop, yellow slow, green go; L2+ follow the spoken request.' },
+  // English Street — English through vehicles (docs/ENGLISH_ZONE.md). The zone screen is the road; this is one stop of it.
+  { id: 'engDrive', zones: ['english'], status: 'ready', icon: { t: 'zip' }, about: 'Drive with Zip: the road of stops (ship: new words · Zip\'s Garage: tap the picture · Zip Says: tap the action), three star levels per town, a badge for each town.' },
   { id: 'stickers', zones: ['play'], status: 'ready', icon: { t: 'icon', icon: 'garage' }, about: 'My Garage: stickers, paintings and built cars.' },
 ];
 

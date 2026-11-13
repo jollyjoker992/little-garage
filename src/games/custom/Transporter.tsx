@@ -1,4 +1,5 @@
 // Car Transporter: "Load 4 cars onto the truck!" — tap cars to load (counted aloud), tap to unload,
+import { echoCount } from '../../engine/echo';
 // GO checks the count. L3: some cars are already on: "The truck has 3. Make it 7!" (adding up to 10).
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { LEVELS } from '../../content/levels';
@@ -84,7 +85,7 @@ export function Transporter() {
     if (busy.current || loaded.includes(i) || have >= 10) return;
     sfx('pop');
     setLoaded((l) => [...l, i]);
-    void say(L(`num.${have + 1}`));
+    void say([L(`num.${have + 1}`), ...echoCount(have + 1)]);
   };
   const unload = (i: number) => {
     if (busy.current) return;

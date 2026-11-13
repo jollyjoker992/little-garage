@@ -12,6 +12,7 @@ import { GENERATORS } from './rounds';
 import { SequenceGame } from './seq/SequenceGame';
 import { SEQ_GENERATORS } from './seq/generators';
 import { Garage } from '../screens/Garage';
+import { DriveStop } from './english/DriveStop';
 
 /** Custom (non-choice) games: id → screen. `arg` is the optional extra route segment. */
 const CUSTOM: Record<string, (arg?: string) => ReactNode> = {
@@ -24,6 +25,7 @@ const CUSTOM: Record<string, (arg?: string) => ReactNode> = {
   roadPuzzle: () => <Puzzle />,
   letterRoad: () => <LetterRoad />,
   stickers: () => <Garage />,
+  engDrive: (arg) => <DriveStop arg={arg} />,
 };
 
 export function isPlayable(id: string) {

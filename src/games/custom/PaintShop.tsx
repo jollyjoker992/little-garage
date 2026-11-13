@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type PointerEvent } from 'react';
+import { echoColor } from '../../engine/echo';
 import { ArtById } from '../../art/ArtById';
 import { defaultsFor, type Fills } from '../../art/defaults';
 import { BRANDS, BRAND_BY_ID, spoken, type BrandId } from '../../content/brands';
@@ -70,7 +71,7 @@ export function PaintShop({ openId }: { openId?: string }) {
   const pickColor = (c: ColorId) => {
     setColor(c);
     sfx('pop');
-    void say(L('say.value', { value: L(`color.${c}`) }));
+    void say([L('say.value', { value: L(`color.${c}`) }), ...echoColor(c)]);
   };
 
   const paint = (e: PointerEvent) => {
@@ -90,7 +91,7 @@ export function PaintShop({ openId }: { openId?: string }) {
       setParty((x) => x + 1);
       void say([{ sfx: 'fanfare' }, L('paint.matched')]);
     } else {
-      void say(L(`color.${colorIdOf(hex) ?? color}`));
+      void say([L(`color.${colorIdOf(hex) ?? color}`), ...echoColor(colorIdOf(hex) ?? color)]);
     }
   };
 

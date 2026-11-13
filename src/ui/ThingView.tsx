@@ -4,6 +4,7 @@ import { COLORS } from '../content/colors';
 import { VehicleArt } from '../art/vehicles';
 import { LogoArt } from '../art/logos';
 import { OUT } from '../art/kit';
+import { ActionIcon, ShipArt, ZipArt } from '../art/english';
 
 const FONT = 'Arial Rounded MT Bold, Arial, sans-serif';
 
@@ -41,6 +42,7 @@ function Sign({ text, bg, color = '#263238', round }: { text: string; bg: string
 }
 
 function Icon({ icon }: { icon: string }) {
+  if (icon === 'ship') return <ShipArt />;
   if (icon === 'trafficLight') {
     return (
       <svg viewBox="0 0 100 100" className="thing-svg">
@@ -171,6 +173,8 @@ export function ThingView({ thing, fit = 'ground' }: { thing: Thing; fit?: 'grou
     case 'word': return <Word text={thing.text} k={thing.k} />;
     case 'dots': return <Dots n={thing.n} />;
     case 'mystery': return <Sign text="?" bg="#e1f5fe" color="#1e88e5" round />;
+    case 'zip': return <div className={`thing-vehicle ${fit}`}><ZipArt lights={thing.lights} /></div>;
+    case 'action': return <ActionIcon a={thing.a} />;
     case 'speaker':
       return (
         <svg viewBox="0 0 100 100" className="thing-svg">

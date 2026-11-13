@@ -9,21 +9,30 @@ import { update } from '../engine/store';
 import { Confetti } from '../ui/Confetti';
 import { IconHome, TopBar } from '../ui/TopBar';
 import { VehicleArt } from '../art/vehicles';
+import { EN, voiced } from '../engine/i18n';
+import { echoSticker } from '../engine/echo';
+import { mateSay } from '../engine/mates';
+import { MateBar } from '../ui/MateBar';
 
 const STICKER_COLORS: ColorId[] = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink'];
 
-/** End-of-session reward: a new sticker for My Garage. */
-export function Reward({ onAgain, back }: { onAgain: () => void; back: string }) {
+/** End-of-session reward: a new sticker for My Garage. `english`: Zip and the classmates say goodbye too. */
+export function Reward({ onAgain, back, english }: { onAgain: () => void; back: string; english?: boolean }) {
   const [sticker] = useState(() => {
     const r = makeRng();
     return { v: pick(r, VEHICLE_IDS) as VehicleId, color: pick(r, STICKER_COLORS) };
   });
   const saved = useRef(false);
   useEffect(() => {
-    if (!saved.current) update((s) => ({ stickers: [...s.stickers, { ...sticker, at: Date.now() }] }));
+    // Finishing an English game lets the next classmate come off the ship on his next visit.
+    if (!saved.current) update((s) => ({ stickers: [...s.stickers, { ...sticker, at: Date.now() }], ...(english ? { mateDue: true } : {}) }));
     saved.current = true;
-    void say([{ sfx: 'fanfare' }, L('reward', { color: L(`color.${sticker.color}`), vehicle: L(`v.${sticker.v}`) }), L('reward.again')]);
-  }, [sticker]);
+    void say([
+      { sfx: 'fanfare' }, L('reward', { color: L(`color.${sticker.color}`), vehicle: L(`v.${sticker.v}`) }),
+      ...(english ? [EN('echo.colorVehicle', { color: L(`color.${sticker.color}`), vehicle: L(`v.${sticker.v}`) }, 'word'), ...mateSay('end'), voiced(L('zip.bye'), 'zip')] : echoSticker(sticker.color, sticker.v)),
+      L('reward.again'),
+    ]);
+  }, [sticker, english]);
   return (
     <div className="screen reward">
       <div className="reward-top"><TopBar back={back} /></div>
@@ -37,6 +46,7 @@ export function Reward({ onAgain, back }: { onAgain: () => void; back: string })
         </button>
         <button className="big-btn" onClick={() => goBack(back)} aria-label="Back"><IconHome size={72} /></button>
       </div>
+      {english && <MateBar />}
     </div>
   );
 }

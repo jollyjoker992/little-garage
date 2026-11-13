@@ -52,6 +52,8 @@
 | `zone.garage.intro` | The Garage! Let's listen and remember. | Gara! Mình nghe và nhớ nào. |
 | `zone.play` | Playground | Sân chơi |
 | `zone.play.intro` | The Playground! Let's make something! | Sân chơi! Mình cùng sáng tạo nào! |
+| `zone.english` | English Street | Phố Tiếng Anh |
+| `zone.english.intro` | English Street! Here we learn English words for cars and trucks, with Zip! | Phố Tiếng Anh! Ở đây mình học tiếng Anh về các loại xe cùng Zip! |
 
 ## Game names & intros
 
@@ -127,6 +129,14 @@
 | `game.transporter.intro` | The big truck carries cars! Load the right number, then press GO. | Xe tải to chở ô tô! Chất đúng số xe rồi bấm ĐI nhé. |
 | `game.letterRoad` | Letter Road | Đường chữ cái |
 | `game.letterRoad.intro` | Drive your car along the letter road! | Lái xe theo con đường hình chữ cái nào! |
+| `game.engDrive` | Drive with Zip | Lái xe cùng Zip |
+| `game.engDrive.intro` | Let's drive with Zip to three English stops! | Mình cùng lái xe với Zip qua ba trạm học tiếng Anh nhé! |
+| `game.engMeet` | Ship Arrives | Tàu cập bến |
+| `game.engMeet.intro` | The ship brings new English words! Listen, say it with Zip, then find the picture! | Tàu chở các từ tiếng Anh mới đến rồi! Con nghe, nói theo Zip, rồi tìm đúng hình nhé! |
+| `game.engFind` | Zip's Garage | Gara của Zip |
+| `game.engFind.intro` | Zip says an English word. Tap the right picture! | Zip nói một từ tiếng Anh. Con chạm vào đúng hình nhé! |
+| `game.engDo` | Zip Says | Zip bảo |
+| `game.engDo.intro` | Zip says an English word. Tap that button and Zip will do it! | Zip nói một từ tiếng Anh. Con bấm đúng nút đó để Zip làm theo nhé! |
 
 ## Prompts
 
@@ -231,6 +241,17 @@
 | `v.crane` | crane | xe cẩu |
 | `v.mixer` | cement mixer | xe trộn bê tông |
 | `v.roller` | road roller | xe lu |
+| `v.motorbike` | motorbike | xe máy |
+| `v.bicycle` | bicycle | xe đạp |
+| `v.taxi` | taxi | xe taxi |
+| `v.truck` | truck | xe tải |
+| `v.garbageTruck` | garbage truck | xe rác |
+| `v.towTruck` | tow truck | xe cứu hộ |
+| `v.train` | train | tàu hỏa |
+| `v.plane` | plane | máy bay |
+| `v.boat` | boat | thuyền |
+| `v.helicopter` | helicopter | trực thăng |
+| `v.rocket` | rocket | tên lửa |
 
 ## Numbers
 
@@ -331,6 +352,101 @@
 |---|---|---|
 | `memory.match` | {name}! A match! | {name}! Đúng cặp rồi! |
 
+## English Street: taught words (the only lines always said in English)
+
+| Key | English | Tiếng Việt |
+|---|---|---|
+| `eng.phrase2` | {c} {w}! | {c} {w}! |
+| `echo.colorVehicle` | {color} {vehicle}! | {color} {vehicle}! |
+
+## English Street: Zip and the helper (app language)
+
+| Key | English | Tiếng Việt |
+|---|---|---|
+| `zip.hello` | • Hello! I'm Zip! Beep beep!<br>• Hi! I'm Zip! Let's go! | • Xin chào! Tớ là Zip! Bíp bíp!<br>• Chào cậu! Tớ là Zip! Đi thôi! |
+| `zip.hello.kid` | • Hello, {kid}! I'm Zip! Beep beep!<br>• Hi, {kid}! Let's go! | • Chào {kid}! Tớ là Zip! Bíp bíp!<br>• Chào {kid}! Tớ là Zip! Đi thôi! |
+| `zip.bye` | • Bye bye! See you tomorrow!<br>• Bye bye! Thank you! | • Tạm biệt! Mai gặp lại nhé!<br>• Tạm biệt! Cảm ơn cậu nhé! |
+| `zip.bye.kid` | • Bye bye, {kid}! See you tomorrow!<br>• Bye bye, {kid}! Thank you! | • Tạm biệt {kid}! Mai gặp lại nhé!<br>• Tạm biệt {kid}! Cảm ơn cậu nhé! |
+| `zip.cheer` | • Yes!<br>• Good job!<br>• You got it!<br>• Awesome!<br>• High five!<br>• Beep beep, hooray! | • Đúng rồi!<br>• Giỏi quá!<br>• Chuẩn luôn!<br>• Tuyệt vời!<br>• Đập tay nào!<br>• Bíp bíp, hoan hô! |
+| `zip.cheer.kid` | • Yes!<br>• Good job, {kid}!<br>• You got it!<br>• Awesome!<br>• Yes, {kid}! High five!<br>• Beep beep, hooray! | • Đúng rồi!<br>• {kid} giỏi quá!<br>• Chuẩn luôn!<br>• Tuyệt vời!<br>• {kid} ơi, đập tay nào!<br>• Bíp bíp, hoan hô! |
+| `zip.tryAgain` | • Uh-oh! Try again!<br>• Oops! Look again! | • Ối! Thử lại nhé!<br>• Ồ! Nhìn lại nào! |
+| `zip.whatName` | Hello, new friend! What's your name? | Chào bạn mới! Bạn tên là gì nhỉ? |
+| `zip.whatCar` | {mate}, what's your car? | {mate} ơi, xe của cậu là xe gì? |
+| `zip.whatColor` | What color? | Màu gì nhỉ? |
+| `unit.rescue` | Rescue cars | Xe cứu hộ |
+| `unit.build` | Construction | Công trường |
+| `unit.street` | On the street | Đường phố |
+| `unit.colors` | Colors | Màu sắc |
+| `unit.actions` | Go and stop | Chạy và dừng |
+| `unit.travel` | Far away | Đi xa |
+| `act.go` | go | chạy |
+| `act.stop` | stop | dừng lại |
+| `act.slow` | slow | chạy chậm |
+| `act.fast` | fast | chạy nhanh |
+| `act.honk` | honk | bấm còi |
+| `act.lights` | lights on | bật đèn |
+| `eng.a.find` | Where is the {w}? | Đâu là {w}? |
+| `eng.a.findColor` | Where is the {w} car? | Xe màu {w} đâu nhỉ? |
+| `eng.a.findAction` | Which button is {w}? | Nút nào là {w}? |
+| `eng.inEnglish` | Say it with me: | Tiếng Anh là: |
+| `eng.where` | Where is the: | Đâu là xe: |
+| `eng.whereThing` | Where is the: | Đâu là: |
+| `eng.whereColor` | Which car is: | Đâu là xe màu: |
+| `eng.whereAction` | Which button is: | Nút nào là: |
+| `eng.road.town` | This is {unit} town! | Đây là khu {unit}! |
+| `eng.road.replay` | You have this badge! Tap a stop to play it again! | Con có huy hiệu ở đây rồi! Chạm vào một trạm để chơi lại nhé! |
+| `eng.road.allDone` | You have every badge! Let's drive and practice all the words! | Con có đủ huy hiệu rồi! Mình lái xe ôn lại các từ nhé! |
+| `eng.road.locked` | Not yet! Play the glowing stop first! | Chưa đến trạm này! Con chơi trạm đang sáng trước nhé! |
+| `eng.badge.locked` | Not open yet! Earn the badge before it first! | Chưa mở đâu! Con lấy huy hiệu trước đó đã nhé! |
+| `eng.stopDone` | One stop done! Let's drive on! | Xong một trạm rồi! Mình đi tiếp nào! |
+| `eng.stopAgain` | Nice practice! | Con ôn lại giỏi lắm! |
+| `eng.stopRetry` | Almost! Let's play this stop one more time! | Gần được rồi! Mình chơi lại trạm này một lần nữa nhé! |
+| `eng.level2` | Level up: two stars! From now on, Zip only says the English name! | Lên cấp hai sao! Từ giờ Zip chỉ nói tên tiếng Anh thôi nhé! |
+| `eng.level3` | Level up: three stars! Now Zip says just the English word. Listen carefully! | Lên cấp ba sao! Giờ Zip chỉ nói đúng một từ tiếng Anh. Con nghe kỹ nhé! |
+| `eng.badge` | You finished {unit} town! You earned a badge! | Con học xong khu {unit} rồi! Con được một huy hiệu! |
+| `eng.zipSays` | Zip says: | Zip nói: |
+| `eng.means` | That means {w}! | Nghĩa là {w}! |
+| `eng.meet.vehicle` | Who's this? It's the {w}! | Ai đây nhỉ? Là {w}! |
+| `eng.meet.color` | Look! A {w} car! | Nhìn kìa! Xe màu {w}! |
+| `eng.meet.action` | Look at Zip! {w}! | Nhìn Zip kìa! Zip đang {w}! |
+| `eng.sayWithZip` | Your turn! Say it with Zip! | Con nói theo Zip nào! |
+| `eng.friend.arrive` | Look! A new friend is coming off the ship! | Nhìn kìa! Có bạn mới xuống tàu! |
+| `eng.friend.pickName` | Pick a name for your new friend! | Con đặt tên cho bạn mới đi! |
+| `eng.friend.how` | How shall we name your new friend? Say it, tap letters, or pick a name! | Con đặt tên bạn mới thế nào nhỉ? Nói vào micro, bấm chữ cái, hay chọn tên có sẵn? |
+| `eng.friend.howNoMic` | Tap letters to make a name, or pick one! | Con bấm chữ cái để đặt tên, hoặc chọn một tên có sẵn nhé! |
+| `eng.friend.sayName` | Tap the microphone and say a name, nice and loud! | Con bấm micro rồi nói tên bạn ấy thật to nhé! |
+| `eng.friend.notHeard` | Hmm, I didn't hear it. Tap and say it again, louder! | Ơ, chưa nghe thấy gì cả! Con bấm micro rồi nói lại to hơn nhé! |
+| `eng.friend.noMic` | The microphone isn't on. Let's tap letters! | Micro chưa bật rồi. Mình bấm chữ cái nhé! |
+| `eng.friend.typeName` | Tap letters to make a name! | Con bấm các chữ cái để viết tên bạn ấy nhé! |
+| `eng.friend.pickReady` | Pick a name! | Con chọn một cái tên nhé! |
+| `eng.friend.done` | Now {mate} will play with you every day! | Từ giờ {mate} sẽ chơi cùng con mỗi ngày! |
+
+## Classmates (app language, each with their own voice)
+
+| Key | English | Tiếng Việt |
+|---|---|---|
+| `mate.hello` | I'm {mate}! Hi! | Tớ là {mate}! Chào cậu! |
+| `mate.hello.kid` | I'm {mate}! Hi, {kid}! | Tớ là {mate}! Chào {kid}! |
+| `mate.start` | • Let's go! Vroom!<br>• Ready, set, go!<br>• I'm ready! | • Đi thôi! Brừm brừm!<br>• Một, hai, ba, đi nào!<br>• Tớ sẵn sàng rồi! |
+| `mate.start.kid` | • Let's go, {kid}! Vroom!<br>• Ready, set, go!<br>• I'm ready, {kid}! | • Đi thôi {kid} ơi! Brừm brừm!<br>• Một, hai, ba, đi nào!<br>• Tớ sẵn sàng rồi, {kid}! |
+| `mate.right` | • Wow!<br>• Yes! Yes!<br>• High five!<br>• You did it!<br>• Beep beep, hooray! | • Oa!<br>• Đúng rồi! Đúng rồi!<br>• Đập tay nào!<br>• Cậu giỏi quá!<br>• Bíp bíp, hoan hô! |
+| `mate.right.kid` | • Wow!<br>• Yes! Yes!<br>• High five!<br>• You did it, {kid}!<br>• Beep beep, hooray! | • Oa!<br>• Đúng rồi! Đúng rồi!<br>• Đập tay nào!<br>• {kid} giỏi quá!<br>• Bíp bíp, hoan hô! |
+| `mate.miss` | • Hmm… try again!<br>• Ooh, almost!<br>• You can do it! | • Ừm… thử lại nhé!<br>• Ồ, gần đúng rồi!<br>• Cậu làm được mà! |
+| `mate.hint` | • Psst! Look over there!<br>• Psst! The shiny one! | • Suỵt! Nhìn bên kia kìa!<br>• Suỵt! Cái đang sáng đó! |
+| `mate.streak` | Beep beep beep! Three in a row! | Bíp bíp bíp! Đúng ba lần liền! |
+| `mate.levelUp` | Level up! Woohoo! | Lên cấp rồi! Hoan hô! |
+| `mate.end` | • Yay! That was fun!<br>• Bye bye! See you! | • Yeah! Vui quá đi!<br>• Tạm biệt! Hẹn gặp lại! |
+| `mate.end.kid` | • Yay! That was fun, {kid}!<br>• Bye bye, {kid}! See you! | • Yeah! Vui quá {kid} ơi!<br>• Tạm biệt {kid}! Hẹn gặp lại! |
+| `mate.wow` | • Wow!<br>• Ooh!<br>• Cool! | • Oa!<br>• Ồ!<br>• Hay quá! |
+| `mate.tap.silly` | • Ah-choo! Beep!<br>• Honk honk! Hee hee!<br>• I'm a bit sleepy…<br>• My {car} is the best! | • Hắt xì! Bíp!<br>• Bim bim! Hì hì!<br>• Tớ hơi buồn ngủ…<br>• {car} của tớ là nhất! |
+| `mate.tap.curious` | • What's that? Ooh!<br>• I like {color}!<br>• Where are we going? | • Cái gì thế? Ồ!<br>• Tớ thích màu {color}!<br>• Mình đi đâu thế? |
+| `mate.tap.speedy` | • Vroom vroom! Wheee!<br>• My {car} is fast!<br>• High five! | • Brừm brừm! Yeah!<br>• {car} của tớ chạy nhanh lắm!<br>• Đập tay nào! |
+| `mate.tap.shy` | • Hi…<br>• I like playing with you!<br>• My {car} is {color}. | • Chào cậu…<br>• Tớ thích chơi với cậu lắm!<br>• {car} của tớ màu {color}. |
+| `mate.wake` | Huh? Beep! I'm awake! Let's play! | Hả? Bíp! Tớ dậy rồi! Chơi tiếp nào! |
+| `mate.wake.kid` | Huh? Beep! I'm awake! Let's play, {kid}! | Hả? Bíp! Tớ dậy rồi! {kid} ơi, chơi tiếp nào! |
+| `mate.tooMany` | Hee hee! Let's play the game! | Hì hì! Mình chơi tiếp nào! |
+| `mate.tooMany.kid` | Hee hee! Let's play the game, {kid}! | Hì hì! {kid} ơi, mình chơi tiếp nào! |
+
 ## Other
 
 | Key | English | Tiếng Việt |
@@ -377,6 +493,7 @@
 | `driver.dog` | a dog driver | chú chó lái xe |
 | `driver.cat` | a cat driver | chú mèo lái xe |
 | `driver.bear` | a bear driver | chú gấu lái xe |
+| `driver.bunny` | a bunny driver | bạn thỏ lái xe |
 | `engine.hum` | quiet engine | động cơ êm |
 | `engine.vroom` | vroom engine | động cơ brừm |
 | `engine.race` | race engine | động cơ xe đua |
@@ -399,3 +516,4 @@
 | `order.pattern` | With {pattern}! | Có {pattern} nhé! |
 | `order.done` | That's exactly what I ordered! Press GO! | Đúng y như mình đặt! Bấm ĐI nào! |
 | `order.notYet` | Hmm, not quite what I ordered. Look at the order! | Ừm, chưa giống đơn đặt lắm. Nhìn đơn đặt nhé! |
+| `drive.stop` | Stop {n}: {place}! Tap the green button! | Trạm số {n}: {place}! Con bấm nút xanh nhé! |

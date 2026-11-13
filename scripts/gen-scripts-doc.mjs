@@ -19,6 +19,9 @@ const SECTIONS = [
   ['Build a Car', /^build\./],
   ['Traffic Light', /^traffic\./],
   ['Logo Match', /^memory\./],
+  ['English Street: taught words (the only lines always said in English)', /^(eng\.phrase2|echo\.)/],
+  ['English Street: Zip and the helper (app language)', /^(zip\.|eng\.|unit\.|act\.)/],
+  ['Classmates (app language, each with their own voice)', /^mate\./],
 ];
 
 const fmt = (v) => (Array.isArray(v) ? v.map((x) => `• ${x}`).join('<br>') : v).replace(/\|/g, '\\|');

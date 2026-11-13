@@ -3,6 +3,10 @@
 import { BASIC_COLORS, MORE_COLORS, type ColorId } from './colors';
 import type { ShapeId } from './shapes';
 import { JOB_VEHICLES, type VehicleId } from './vehicles';
+import { wordsOf } from './english';
+
+const RESCUE = wordsOf('rescue').map((w) => w.id);
+const COLOR_WORDS = wordsOf('colors').map((w) => w.id);
 
 export type Level = 1 | 2 | 3;
 export type Levels<C> = Record<Level, C & { rounds?: number }>;
@@ -34,6 +38,8 @@ export type CarrierCfg = { min: number; max: number; pre: boolean };
 export type PuzzleCfg = { cols: number; rows: number };
 export type LetterRoadCfg = { letters: string };
 export type BuildCfg = { orders: boolean; traits: 2 | 3 };
+/** Zip's Garage round settings. On the road they come from the stop (content/english.ts ROAD); `targets` are asked in order. */
+export type EngFindCfg = { level: 1 | 2 | 3; targets: string[]; pool: string[]; choices: number; vehicles?: string[]; rounds?: number };
 export type StoryCfg = { max: number; ops: ('take' | 'add')[]; kmax: number; choices: number };
 
 export const LEVELS = {
@@ -183,6 +189,12 @@ export const LEVELS = {
     2: { requests: true, yellow: false, rounds: 5 },
     3: { requests: true, yellow: true, rounds: 6 },
   } as Levels<TrafficCfg>,
+  // English Street: the real settings come from the road's stops; these are the same shapes for the generator tests.
+  engFind: {
+    1: { level: 1, targets: RESCUE, pool: RESCUE, choices: 2 },
+    2: { level: 2, targets: RESCUE, pool: RESCUE, choices: 3 },
+    3: { level: 3, targets: COLOR_WORDS, pool: COLOR_WORDS, choices: 4, vehicles: RESCUE },
+  } as Levels<EngFindCfg>,
 };
 
 export const DEFAULT_ROUNDS = 5;

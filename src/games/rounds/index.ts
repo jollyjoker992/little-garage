@@ -18,11 +18,12 @@ import { sorting } from './sorting';
 import { quickLook } from './quickLook';
 import { whoLeft } from './whoLeft';
 import { parkingStory } from './parkingStory';
+import { engFind } from './engFind';
 
 /** Choice games: game id → round generator. Level configs live in src/content/levels.ts under the same id. */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const GENERATORS: Record<string, Generator<any>> = {
   count, numberRoad, loadingDock, letterHighway, brandLetters, abcConvoy,
   carWash, shapeGarage, bigSmall, oddOneOut, patternRoad, mechanic, whoJob, soundGarage,
-  sorting, readBrand, quickLook, whoLeft, parkingStory,
+  sorting, readBrand, quickLook, whoLeft, parkingStory, engFind,
 };

@@ -1,7 +1,7 @@
 # Little Garage — Game Design
 
 A car-themed learning game for a 3–4 year old who loves car brands and construction vehicles.
-It teaches **numbers, letters, colors, shapes, early logic, memory and listening**, and runs on an iPad (landscape, touch, offline).
+It teaches **numbers, letters, colors, shapes, early logic, memory and listening**, plus **first English words** on English Street, and runs on an iPad (landscape, touch, offline).
 
 ## Who it's for
 - **Level 1 ≈ age 3**: 2 choices, numbers 1–3, 4 colors, big obvious differences.
@@ -24,7 +24,7 @@ He can't read, so **every instruction is spoken** (English or Vietnamese; switch
 11. **Full screen.** Tapping ▶ also goes full screen (browsers only allow it right after a tap); the ⛶ button on the home screen toggles it. iPhone Safari can't make pages full screen, so there the button explains *Add to Home Screen*; the button is hidden when the app is already opened from the home screen.
 12. **His name.** When a name is set in Grown-ups settings, the voice uses it (hello and bye, about half the cheers, a gentle "Almost, King!", level up, stickers, the Build a Car customers), the title becomes "King's Garage" / "Gara của King", Build a Car starts with his name on the plate, the last License Plate (L2, L3) spells it, and round 2 of Letter Highway asks for its first letter ("K is for King!"). Without a name everything stays generic.
 
-## Map: 6 zones
+## Map: 7 zones
 | Zone | Teaches | Background |
 |---|---|---|
 | 🅿️ Parking Lot (`numbers`) | counting, numerals, more/fewer, adding | yellow |
@@ -33,6 +33,7 @@ He can't read, so **every instruction is spoken** (English or Vietnamese; switch
 | 🚧 Construction Site (`logic`) | size, odd-one-out, patterns, shadows | orange |
 | 🔧 Garage (`garage`) | memory, sound recognition, vehicle jobs | gray |
 | 🎪 Playground (`play`) | free play: build, paint, traffic light, sticker book | green |
+| 🚛 English Street (`english`) | English words through vehicles, with Zip and the classmates (see [ENGLISH_ZONE.md](ENGLISH_ZONE.md)) | lavender |
 
 ## Game catalog
 Status: ✅ playable now · 📝 designed, not built yet · ⏸ built but turned off (set `status: 'ready'` in the catalog to bring it back). The source of truth is `src/content/catalog.ts` (status, zone, icon) plus `src/content/levels.ts` (difficulty).
@@ -98,9 +99,42 @@ Status: ✅ playable now · 📝 designed, not built yet · ⏸ built but turned
 | Drawing Board `drawing` | ✅ | (same as above) |
 | My Garage `stickers` | ✅ | Stickers earned, saved paintings (tap to keep painting), drawings (tap to keep drawing), built cars (tap to honk) |
 
+### 🚛 English Street — English through vehicles
+Full design: [ENGLISH_ZONE.md](ENGLISH_ZONE.md). Everyone (Zip the tow truck, the classmates, the helper) speaks the app language; English is only the word being taught, said on its own.
+
+**English Street is a road, not a list of games.** The zone screen shows the badges on top (one town per topic) and the 4 stops of the town he is in; Zip waits at the next stop and ▶ plays it. The stars under a stop are its **level**, which decides how much help he gets:
+
+| Level | What he hears (Vietnamese app) | Cards / buttons |
+|---|---|---|
+| ★ | full help: *"Đâu là xe cứu hỏa? Tiếng Anh là: fire truck!"* | 2 |
+| ★★ | no name in his language: *"Đâu là xe:"* + *"fire truck!"* | 3 |
+| ★★★ | just the word: *"fire truck!"* | 4 |
+
+After two misses at ★★ / ★★★ the meaning is given as help (*"Nghĩa là xe cứu hỏa!"*) and the right card glows.
+
+Each town has **one stop per level**, then its badge:
+
+| Town (badge) | Words | ★ | ★★ | ★★★ |
+|---|---|---|---|---|
+| 🚒 Rescue cars | car, bus, fire truck, police car, ambulance | 🚢 ship brings every word | Zip's Garage (3 cards) | Zip's Garage (4 cards) |
+| 🚧 Construction | excavator, bulldozer, dump truck, crane, cement mixer, road roller | 🚢 | Zip's Garage | Zip's Garage |
+| 🛵 On the street | motorbike, bicycle, taxi, truck, garbage truck, tow truck | 🚢 | Zip's Garage | Zip's Garage |
+| 🎨 Colors | red, blue, yellow, green, orange, pink, black, white | 🚢 | Zip's Garage | Zip's Garage, **two words** (*"red bus!"*) |
+| 🟢 Go and stop | go, stop, slow, fast, honk, lights on | Zip Says (meaning + glowing button) | *"Zip nói: go!"* | *"go!"* |
+| ✈️ Far away | train, plane, boat, helicopter, rocket | 🚢 | Zip's Garage (*"Đâu là: plane!"*) | Zip's Garage |
+
+- **Passing a stop:** 60% of its rounds right on the first try (ship stops always pass; the 3rd try passes anyway). Otherwise: *"Gần được rồi! Mình chơi lại trạm này một lần nữa nhé!"*
+- **After a stop:** the level stars are shown. When the next stop is a new level, a star pops in and the helper says what changes (*"Lên cấp hai sao! Từ giờ Zip chỉ nói tên tiếng Anh thôi nhé!"*). After the ★★★ stop he gets the town's **badge**, and the next town opens.
+- **After every badge** the road turns into mixed ★★★ practice stops that never run out (a sticker each time). Earned towns can be replayed by tapping their badge.
+- **Classmates:** friends he names when they come off the ship (the first on his first visit, then one more per visit after a finished stop). They ride along at the bottom of every English screen, react in the app language, and joke when tapped.
+- **My Garage → 📚:** his badges, and a card for every word he has met with its stars (the highest level he got it right at).
+- Grown-ups: each town can be Auto / On / Off; English echo for the other zones.
+
+**English echo** (Grown-ups): when the language is Tiếng Việt, the other zones add the English word after right answers, paint colors and (optionally) counting: *"Xe cứu hỏa — fire truck!"*
+
 ## Content
 - **24 brands** (simplified badges drawn from the real logos, recognizable rather than exact): Toyota, Honda, BMW, Mercedes, Audi, VinFast, Ford, Tesla, Porsche, Ferrari, Lamborghini, Volkswagen, Kia, Hyundai, Mazda, Jeep, Mitsubishi, Nissan, Chevrolet, MG, Lexus, Land Rover, Volvo, Suzuki.
-- **11 vehicles**: car (4 body styles), police car, bus, fire truck, ambulance, excavator, bulldozer, dump truck, crane, cement mixer, road roller.
+- **22 vehicles**: car (10 body styles), police car, bus, fire truck, ambulance, excavator, bulldozer, dump truck, crane, cement mixer, road roller, motorbike, bicycle, taxi, truck, garbage truck, tow truck, train, plane, boat, helicopter, rocket. Each is a Paint Shop page and can appear in the vehicle games and stickers.
 - **12 colors**, **6 shapes**, numbers 1–10, A–Z.
 
 ## Ideas backlog
@@ -108,4 +142,5 @@ Status: ✅ playable now · 📝 designed, not built yet · ⏸ built but turned
 - Record Dad's voice for the common lines (cheer, tryAgain, intros); see SCRIPTS.md.
 - More sticker scenes (city, race track) where stickers can be placed.
 - "Car of the day": a brand and its letter on the home screen.
-- Counting in Vietnamese and English back-to-back (bilingual mode).
+- ~~Counting in Vietnamese and English back-to-back (bilingual mode).~~ Done: English echo → "Words + counting".
+- English Street phases 2–3 (units 4, 6–10, Fix-it Zip, Paint it!, Order Up, friend turns, field trips…): see ENGLISH_ZONE.md §12.

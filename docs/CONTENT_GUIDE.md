@@ -54,3 +54,8 @@ Grown-ups settings (tap ⚙️ on the home screen) → untick it. Or set `status
 
 ## About the logos
 The badges are simplified drawings meant for a young child to recognize, not exact copies. The brand names and logos are trademarks of their owners and are **not** covered by the project's MIT License (see [Trademarks](../README.md#trademarks)). When you add a brand, draw your own simplified badge instead of copying artwork. To ship without brands: brands come from `BRANDS` in `src/content/brands.ts` and are drawn by `src/art/logos.tsx`. They appear in the brand games (`readBrand`, `brandLetters`, `brandMemory`), as Paint Shop pages, as the Logo option in Build a Car, as the badge on drawn cars (`src/art/vehicles.tsx`, `src/art/CustomCar.tsx`), and as some game icons in `src/content/catalog.ts`.
+
+## English Street: add a word or a town
+- **A vehicle word:** add the vehicle (above), then its id to a town's list in `src/content/english.ts` (`WORDS`). Its name `v.<id>` is both the English word and its meaning in Vietnamese. Vehicles that are not a "xe" (plane, boat…) get `frame: 'eng.whereThing'` automatically when their category is `travel`.
+- **A town:** add it to `UnitId`, `UNITS` (order = the order they open) and `ROAD` (`pictureTown(id)` gives ★ ship → ★★ → ★★★ Zip's Garage), plus `unit.<id>` in both languages.
+- `npm test` checks every town has one stop per level, every word has both names and a picture, and that English is only ever the word being taught.

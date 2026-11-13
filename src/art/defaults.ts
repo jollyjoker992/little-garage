@@ -21,6 +21,18 @@ export const VEHICLE_DEFAULTS: Record<VehicleId, Fills> = {
   crane: { body: C.yellow, cab: C.yellow, arm: C.orange, hook: C.gray, window: C.sky, wheels: C.black },
   mixer: { body: C.gray, cab: C.blue, drum: C.orange, stripe: C.white, window: C.sky, wheels: C.black },
   roller: { body: C.yellow, roof: C.black, drum: C.gray, wheels: C.black },
+  // Every vehicle's main part is "body", so "a red train" paints the right part.
+  motorbike: { body: C.red, seat: C.black, lights: C.yellow, wheels: C.black },
+  bicycle: { body: C.blue, seat: C.brown, wheels: C.black },
+  taxi: { body: C.yellow, window: C.sky, stripe: C.black, lights: C.white, wheels: C.black, sign: C.orange },
+  truck: { body: C.white, cab: C.blue, window: C.sky, lights: C.yellow, wheels: C.black },
+  garbageTruck: { body: C.green, hopper: C.gray, stripe: C.yellow, cab: C.green, window: C.sky, lights: C.yellow, wheels: C.black },
+  towTruck: { body: C.blue, boom: C.orange, hook: C.gray, window: C.sky, siren: C.orange, lights: C.yellow, wheels: C.black },
+  train: { body: C.green, cab: C.red, window: C.sky, chimney: C.black, stripe: C.yellow, lights: C.yellow, wheels: C.black },
+  plane: { body: C.white, tail: C.red, wing: C.gray, window: C.sky, stripe: C.blue },
+  boat: { body: C.red, sail: C.white, stripe: C.white, window: C.sky },
+  helicopter: { body: C.orange, tail: C.orange, window: C.sky, rotor: C.gray },
+  rocket: { body: C.white, nose: C.red, fin: C.red, window: C.sky, flame: C.orange },
 };
 
 export const LOGO_DEFAULTS: Record<BrandId, Fills> = {

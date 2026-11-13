@@ -30,3 +30,12 @@ export function Dots({ total, done }: { total: number; done: number }) {
     </div>
   );
 }
+
+/** The level of an English Street stop: ★ with help, ★★ no meaning, ★★★ just the word. */
+export function LevelStars({ level, max = 3 }: { level: number; max?: number }) {
+  return (
+    <span className="lv-stars" aria-label={`Level ${level}`}>
+      {Array.from({ length: max }, (_, i) => <i key={i} className={i < level ? 'on' : ''}>★</i>)}
+    </span>
+  );
+}

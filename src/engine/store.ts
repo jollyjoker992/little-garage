@@ -4,6 +4,15 @@ import type { Level } from '../content/levels';
 import type { CarBody, VehicleId } from '../content/vehicles';
 import { setKidName, type Lang } from './i18n';
 import type { BuildSpec } from '../content/carParts';
+import type { Mate } from '../content/classmates';
+
+/** English Street word stars: box 0 = new, 1–3 = the highest level he got it right at (docs/ENGLISH_ZONE.md §5). */
+export type WordState = { box: number; seen: number; last: number };
+/** English echo in the other zones: off, after right answers / colors, and also when counting. */
+export type EngEcho = 'off' | 'words' | 'counting';
+/** Unit switch: opens after the badge before it (auto), open now (on), hidden (off). */
+export type UnitMode = 'auto' | 'on' | 'off';
+export type MateChat = 'quiet' | 'normal' | 'chatty';
 
 export type Sticker = { v: VehicleId; color: ColorId; at: number };
 export type Painting = { id: string; art: string; fills: Record<string, string>; at: number };
@@ -27,6 +36,21 @@ export type State = {
   cars: BuiltCar[];
   /** Car names grown-ups typed in Build a Car (newest first). */
   modelNames: string[];
+  // ── English Street ──
+  words: Record<string, WordState>;
+  /** Words a grown-up heard him say on his own ("He said it!"). */
+  said: Record<string, boolean>;
+  /** Stops passed in each town of the road (all of them = the town's badge). */
+  engRoad: Record<string, number>;
+  engEcho: EngEcho;
+  engUnits: Record<string, UnitMode>;
+  /** Named classmates, in the order they arrived. */
+  mates: Mate[];
+  mateOn: boolean;
+  mateCount: number;
+  mateChat: MateChat;
+  /** A new friend may come off the ship: true at the start and after each finished English game (one friend per visit). */
+  mateDue: boolean;
 };
 
 const KEY = 'little-garage:v1';
@@ -44,12 +68,26 @@ const defaults = (): State => ({
   gallery: [],
   cars: [],
   modelNames: [],
+  words: {},
+  said: {},
+  engRoad: {},
+  engEcho: 'off',
+  engUnits: {},
+  mates: [],
+  mateOn: true,
+  mateCount: 2,
+  mateChat: 'normal',
+  mateDue: true,
 });
 
 function load(): State {
   try {
     const raw = localStorage.getItem(KEY);
-    if (raw) return { ...defaults(), ...JSON.parse(raw) };
+    if (raw) {
+      const st = { ...defaults(), ...JSON.parse(raw) };
+      if (st.lang !== 'en' && st.lang !== 'vi') st.lang = defaults().lang; // a damaged save must not stop the game from starting
+      return st;
+    }
   } catch {
     /* private mode / no storage: play without saving */
   }
@@ -73,8 +111,22 @@ export function update(fn: (s: State) => Partial<State>) {
   subs.forEach((f) => f());
 }
 
+/** Clears progress but keeps the settings and the classmates he named. */
 export function resetProgress() {
-  update((s) => ({ ...defaults(), lang: s.lang, rate: s.rate, childName: s.childName, sessionLimit: s.sessionLimit }));
+  update((s) => ({
+    ...defaults(), lang: s.lang, rate: s.rate, childName: s.childName, sessionLimit: s.sessionLimit,
+    engEcho: s.engEcho, engUnits: s.engUnits, mates: s.mates, mateOn: s.mateOn, mateCount: s.mateCount, mateChat: s.mateChat, mateDue: s.mateDue,
+  }));
+}
+
+/** English Street only: forget which words he knows (switches and classmates stay). */
+export function resetEnglish() {
+  update((s) => {
+    const levels = { ...s.levels }, history = { ...s.history };
+    for (const k of Object.keys(levels)) if (k.startsWith('eng')) delete levels[k];
+    for (const k of Object.keys(history)) if (k.startsWith('eng')) delete history[k];
+    return { words: {}, said: {}, engRoad: {}, levels, history };
+  });
 }
 
 function subscribe(f: () => void) {

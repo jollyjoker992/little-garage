@@ -23,6 +23,7 @@ export const oddOneOut: Generator<OddCfg> = (cfg, rng) => {
       construction: VEHICLE_IDS.filter((v) => VEHICLES[v].category === 'construction'),
       emergency: VEHICLE_IDS.filter((v) => VEHICLES[v].category === 'emergency'),
       road: VEHICLE_IDS.filter((v) => VEHICLES[v].category === 'road'),
+      travel: VEHICLE_IDS.filter((v) => VEHICLES[v].category === 'travel'),
     };
     const [gSame, gOdd] = sample(rng, ['construction', 'emergency'] as VehicleCategory[], 2);
     same = sample(rng, groups[gSame], 3).map((v) => ({ t: 'vehicle', v }));

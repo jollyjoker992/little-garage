@@ -9,30 +9,42 @@ import type { Round } from '../engine/round';
 import { say, stopSpeech } from '../engine/speech';
 import { sfx, wait } from '../engine/sound';
 import { getState } from '../engine/store';
+import { echoCount, echoThing } from '../engine/echo';
+import { mateSay } from '../engine/mates';
+import { recordWord, type StopResult } from '../engine/vocab';
+import { MateBar } from '../ui/MateBar';
 import { Confetti } from '../ui/Confetti';
 import { ThingView } from '../ui/ThingView';
-import { Dots, TopBar } from '../ui/TopBar';
+import { Dots, LevelStars, TopBar } from '../ui/TopBar';
 import { Reward } from './Reward';
 import { GENERATORS } from './rounds';
 
 type Session = { idx: number; round: Round; rounds: number };
 
-/** Plays any generator-based game: speak → wait for tap → feedback → next round → sticker. */
-export function ChoiceGame({ gameId }: { gameId: string }) {
+/**
+ * Plays any generator-based game: speak → wait for tap → feedback → next round → sticker.
+ * English Street stops pass their own settings (`cfg`, from the road) and get the result back (`onDone`)
+ * instead of the sticker screen; they also get the classmates and the level stars in the top bar.
+ */
+export function ChoiceGame({ gameId, cfg: stopCfg, back: backTo, onDone }: { gameId: string; cfg?: { rounds?: number; level?: 1 | 2 | 3 }; back?: string; onDone?: (r: StopResult) => void }) {
   const rng = useRef(makeRng()).current;
-  const back = `#/zone/${GAME_BY_ID[gameId]?.zones[0] ?? ''}`;
+  const back = backTo ?? `#/zone/${GAME_BY_ID[gameId]?.zones[0] ?? ''}`;
+  const eng = !!stopCfg;
+  const firstTries = useRef(0);
+  const streak = useRef(0);
 
   const lastSig = useRef('');
   const make = useCallback((idx: number): Session => {
     const level = levelFor(gameId);
-    const cfg = (LEVELS as Record<string, Record<number, { rounds?: number }>>)[gameId][level];
+    const cfg = stopCfg ?? (LEVELS as Record<string, Record<number, { rounds?: number }>>)[gameId][level];
     // Never show the same question twice in a row (same answer + same choices).
-    let round = GENERATORS[gameId](cfg, rng, { lang: getState().lang, level, childName: getState().childName, idx });
+    const ctx = () => ({ lang: getState().lang, level, childName: getState().childName, idx });
+    let round = GENERATORS[gameId](cfg, rng, ctx());
     const sig = (x: Round) => JSON.stringify([x.prompt, x.scene.map(thingKey), x.choices.map((c) => thingKey(c.thing)).sort()]);
-    for (let tries = 0; tries < 8 && sig(round) === lastSig.current; tries++) round = GENERATORS[gameId](cfg, rng, { lang: getState().lang, level, childName: getState().childName, idx });
+    for (let tries = 0; tries < 8 && sig(round) === lastSig.current; tries++) round = GENERATORS[gameId](cfg, rng, ctx());
     lastSig.current = sig(round);
     return { idx, round, rounds: cfg.rounds ?? DEFAULT_ROUNDS };
-  }, [gameId, rng]);
+  }, [gameId, rng, stopCfg]);
 
   const [s, setS] = useState(() => make(0));
   const [misses, setMisses] = useState(0);
@@ -50,7 +62,7 @@ export function ChoiceGame({ gameId }: { gameId: string }) {
   }, []);
 
   const r = s.round;
-  const promptSteps = useCallback(() => [r.promptSfx && { sfx: r.promptSfx }, r.prompt], [r]);
+  const promptSteps = useCallback(() => r.promptLines ?? [r.promptSfx && { sfx: r.promptSfx }, r.prompt], [r]);
 
   // Stage runner: 'look' → (covered / moved) → 'ask'. Choices are disabled until 'ask'.
   const [phase, setPhase] = useState<'look' | 'covered' | 'moved' | 'ask'>('ask');
@@ -60,16 +72,23 @@ export function ChoiceGame({ gameId }: { gameId: string }) {
     const my = ++runId.current;
     const live = () => alive.current && runId.current === my;
     const st = s.round.stage;
-    const intro = s.idx === 0 && replay === 0 && L(`game.${gameId}.intro`);
+    const intro = s.idx === 0 && replay === 0 && [L(`game.${gameId}.intro`), ...(eng ? mateSay('start') : [])];
     void (async () => {
       if (!st) {
+        // English Street: the cards wait until the word has been said, so he listens before tapping.
+        if (eng && replay === 0) {
+          setPhase('look');
+          await say([...(intro || []), ...promptSteps()]);
+          if (live()) setPhase('ask');
+          return;
+        }
         setPhase('ask');
-        await say([intro, ...promptSteps()]);
+        await say([...(intro || []), ...promptSteps()]);
         return;
       }
       setPhase('look');
       if (st.kind === 'story') {
-        await say([intro, st.lines[0]]);
+        await say([...(intro || []), st.lines[0]]);
         if (!live()) return;
         await wait(300);
         if (!live()) return;
@@ -78,7 +97,7 @@ export function ChoiceGame({ gameId }: { gameId: string }) {
         if (!live()) return;
         await say(st.lines[1]);
       } else {
-        await say([intro, st.look]);
+        await say([...(intro || []), st.look]);
         if (!live()) return;
         await wait(st.ms);
         if (!live()) return;
@@ -94,13 +113,16 @@ export function ChoiceGame({ gameId }: { gameId: string }) {
       setPhase('ask');
       await say(promptSteps());
     })();
-  }, [s, gameId, promptSteps, replay]);
+  }, [s, gameId, promptSteps, replay, eng]);
 
   const next = () => {
     if (!alive.current) return;
     busy.current = false;
     setMisses(0); setWrong([]); setSolved(null); setCounted([]); setReplay(0);
-    if (s.idx + 1 >= s.rounds) setFinished(true);
+    if (s.idx + 1 >= s.rounds) {
+      if (onDone) onDone({ first: firstTries.current, total: s.rounds });
+      else setFinished(true);
+    }
     else setS(make(s.idx + 1));
   };
 
@@ -111,8 +133,18 @@ export function ChoiceGame({ gameId }: { gameId: string }) {
       setSolved(id);
       setParty((x) => x + 1);
       sfx('ding');
-      const change = recordRound(gameId, misses === 0);
-      await say([r.answerSay, L('cheer'), change === 'up' && { sfx: 'fanfare' }, change === 'up' && L('levelUp')]);
+      // On the road the stop decides the level, so the adaptive levels stay out of it.
+      const change = eng ? null : recordRound(gameId, misses === 0);
+      recordWords(misses === 0);
+      if (misses === 0) firstTries.current++;
+      streak.current = misses === 0 ? streak.current + 1 : 0;
+      const ans = r.choices.find((c) => c.id === r.answer)?.thing;
+      const mate = !eng ? [] : streak.current === 3 ? mateSay('streak') : mateSay('right');
+      await say([
+        r.answerSay, ...(eng ? [] : echoThing(ans)), r.answerSfx && { sfx: r.answerSfx },
+        ...mate, r.cheer ?? L('cheer'),
+        change === 'up' && { sfx: 'fanfare' }, change === 'up' && L('levelUp'), ...(change === 'up' && eng ? mateSay('levelUp') : []),
+      ]);
       await wait(400);
       next();
       return;
@@ -125,12 +157,16 @@ export function ChoiceGame({ gameId }: { gameId: string }) {
     if (m >= 3) {
       busy.current = true;
       setSolved(r.answer);
-      recordRound(gameId, false);
-      await say([L('reveal'), r.answerSay]);
+      if (!eng) recordRound(gameId, false);
+      recordWords(false);
+      streak.current = 0;
+      await say([L('reveal'), r.answerSay, r.answerSfx && { sfx: r.answerSfx }]);
       await wait(700);
       next();
     } else {
-      void say([L('tryAgain'), m >= 2 && L('hint'), ...promptSteps()]);
+      const hint = m >= 2 ? (eng && mateSay('hint')[0]) || L('hint') : null;
+      // Two misses: the right card glows and, on the road, the word's meaning is given.
+      void say([...(r.tryAgain ?? [L('tryAgain')]), ...(eng && m === 1 ? mateSay('miss') : []), hint, ...(m >= 2 && r.hintLines ? r.hintLines : promptSteps())]);
     }
   };
 
@@ -143,16 +179,22 @@ export function ChoiceGame({ gameId }: { gameId: string }) {
     const pos = counted.indexOf(i);
     const n = pos >= 0 ? pos + 1 : counted.length + 1;
     if (pos < 0) setCounted((c) => [...c, i]);
-    void say(L(`num.${n}`));
+    void say([L(`num.${n}`), ...echoCount(n)]);
   };
+
+  /** Word stars for English rounds. */
+  function recordWords(firstTry: boolean) {
+    for (const id of r.wordIds ?? []) recordWord(id, r.wordLevel ?? 1, firstTry);
+  }
 
   if (finished) {
     return <Reward back={back} onAgain={() => { setFinished(false); setS(make(0)); }} />;
   }
 
   return (
-    <div className={`screen game zone-${GAME_BY_ID[gameId]?.zones[0]} ${r.scene.length ? '' : 'no-scene'}`}>
+    <div className={`screen game zone-${eng ? 'english' : GAME_BY_ID[gameId]?.zones[0]} ${r.scene.length ? '' : 'no-scene'}`}>
       <TopBar back={back} onReplay={() => (r.stage ? setReplay((x) => x + 1) : void say(promptSteps()))}>
+        {stopCfg?.level && <LevelStars level={stopCfg.level} />}
         <Dots total={s.rounds} done={s.idx + (solved ? 1 : 0)} />
       </TopBar>
       {r.scene.length > 0 && (
@@ -190,6 +232,7 @@ export function ChoiceGame({ gameId }: { gameId: string }) {
           </button>
         ))}
       </div>
+      {eng && <MateBar />}
       {party > 0 && <Confetti key={party} />}
     </div>
   );

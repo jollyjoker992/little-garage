@@ -12,13 +12,22 @@ import { sfx } from '../engine/sound';
 import { useStore } from '../engine/store';
 import { CHANGED, listDrawings } from '../engine/drawings';
 import { TopBar } from '../ui/TopBar';
+import { ThingView } from '../ui/ThingView';
+import { UNITS, WORDS } from '../content/english';
+import { MASTERED, hasBadge, wordLine } from '../engine/vocab';
+import { LevelStars } from '../ui/TopBar';
 
-type Tab = 'stickers' | 'paintings' | 'drawings' | 'cars';
+type Tab = 'stickers' | 'paintings' | 'drawings' | 'cars' | 'words';
 
 export function Garage() {
   const stickers = useStore((s) => s.stickers);
   const gallery = useStore((s) => s.gallery);
   const cars = useStore((s) => s.cars);
+  const progress = useStore((s) => s.words);
+  const road = useStore((s) => s.engRoad);
+  // English Street: a badge per finished town, and a card for every word he has met (its stars = the level he knows it at).
+  const badges = UNITS.filter((u) => hasBadge(road, u.id));
+  const cards = WORDS.filter((w) => (progress[w.id]?.box ?? 0) >= 1);
   const [tab, setTab] = useState<Tab>('stickers');
   const [drawings, setDrawings] = useState<{ id: string; url: string }[]>([]);
   useEffect(() => {
@@ -45,6 +54,7 @@ export function Garage() {
           <button className={tab === 'paintings' ? 'on' : ''} onClick={() => setTab('paintings')}>🎨 {gallery.length}</button>
           <button className={tab === 'drawings' ? 'on' : ''} onClick={() => setTab('drawings')}>✏️ {drawings.length}</button>
           <button className={tab === 'cars' ? 'on' : ''} onClick={() => setTab('cars')}>🚗 {cars.length}</button>
+          <button className={tab === 'words' ? 'on' : ''} onClick={() => setTab('words')}>📚 {cards.length}</button>
         </div>
       </TopBar>
       <div className="collection">
@@ -76,7 +86,21 @@ export function Garage() {
             </button>
           );
         })}
-        {((tab === 'stickers' && !stickers.length) || (tab === 'paintings' && !gallery.length) || (tab === 'drawings' && !drawings.length) || (tab === 'cars' && !cars.length)) && (
+        {tab === 'words' && badges.map((u) => (
+          <button key={u.id} className="col-item word-item badge-item pop-in" onClick={() => { sfx('ding'); void say(L(`unit.${u.id}`)); }}>
+            <div className="wi-art badge-mini">
+              <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#ffecb3" stroke="#f9a825" strokeWidth="7" /></svg>
+              <div className="badge-mini-icon"><ThingView thing={u.icon} fit="center" /></div>
+            </div>
+          </button>
+        ))}
+        {tab === 'words' && cards.map((w) => (
+          <button key={w.id} className={`col-item word-item pop-in ${(progress[w.id]?.box ?? 0) >= MASTERED ? 'gold' : ''}`} onClick={() => { sfx('pop'); void say([wordLine(w), w.sfx && { sfx: w.sfx }]); }}>
+            <div className="wi-art"><ThingView thing={w.thing} fit="center" /></div>
+            <span className="word-stars"><LevelStars level={progress[w.id]?.box ?? 0} /></span>
+          </button>
+        ))}
+        {((tab === 'words' && !cards.length) || (tab === 'stickers' && !stickers.length) || (tab === 'paintings' && !gallery.length) || (tab === 'drawings' && !drawings.length) || (tab === 'cars' && !cars.length)) && (
           <div className="empty">🚗💨</div>
         )}
       </div>

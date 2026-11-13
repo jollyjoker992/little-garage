@@ -9,7 +9,7 @@ import { int, pick, sample, type Rng } from '../engine/rng';
 export type Wheels = 'small' | 'normal' | 'monster';
 export type Pattern = 'none' | 'stripes' | 'flames' | 'stars' | 'dots' | 'twoTone';
 export type Extra = 'spoiler' | 'rack' | 'siren' | 'taxi' | 'flag';
-export type Driver = 'none' | 'boy' | 'dog' | 'cat' | 'bear';
+export type Driver = 'none' | 'boy' | 'dog' | 'cat' | 'bear' | 'bunny';
 export type Engine = 'hum' | 'vroom' | 'race';
 /** Wheel (rim) colour: classic silver, gold, or any paint. The tyre is always black. */
 export type RimColor = ColorId | 'silver' | 'gold';
@@ -47,7 +47,7 @@ export const MODEL_PRESETS = ['Turbo', 'Rocket', 'Super'];
 export const MODEL_MAX = 12;
 export const PATTERNS: Pattern[] = ['none', 'stripes', 'flames', 'stars', 'dots', 'twoTone'];
 export const EXTRAS: Extra[] = ['spoiler', 'rack', 'siren', 'taxi', 'flag'];
-export const DRIVERS: Driver[] = ['none', 'boy', 'dog', 'cat', 'bear'];
+export const DRIVERS: Driver[] = ['none', 'boy', 'dog', 'cat', 'bear', 'bunny'];
 export const HORNS: SfxName[] = ['honk', 'horn', 'woop', 'beepReverse'];
 export const ENGINES: Engine[] = ['hum', 'vroom', 'race'];
 export const ENGINE_SFX: Record<Engine, SfxName> = { hum: 'hum', vroom: 'vroom', race: 'raceEngine' };

@@ -12,6 +12,7 @@ import { Parent } from '../screens/Parent';
 import { Sleep } from '../screens/Sleep';
 import { Start } from '../screens/Start';
 import { ZoneScreen } from '../screens/ZoneScreen';
+import { EnglishZone } from '../screens/EnglishZone';
 import { useRoute } from './router';
 
 export function App() {
@@ -41,7 +42,8 @@ export function App() {
 
   const [page, id, arg] = route;
   let screen;
-  if (page === 'zone' && id) screen = <ZoneScreen key={id} id={id as ZoneId} />;
+  if (page === 'zone' && id === 'english') screen = <EnglishZone key={id} />;
+  else if (page === 'zone' && id) screen = <ZoneScreen key={id} id={id as ZoneId} />;
   else if (page === 'game' && id) screen = <GameScreen key={`${id}/${arg ?? ''}`} id={id} arg={arg} />;
   else if (page === 'garage') screen = <Garage />;
   else if (page === 'parent') screen = <Parent />;

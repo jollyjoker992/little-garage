@@ -1,4 +1,5 @@
 // Drawing Board: free finger painting with pens, crayons, brushes, rainbow and star pens, stickers
+import { echoColor } from '../../engine/echo';
 // and an eraser — on blank paper or over a vehicle/logo outline (outlines stay on top, like a
 // coloring book). Work is saved to My Garage automatically when leaving or starting a new page.
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type PointerEvent as RPointerEvent } from 'react';
@@ -305,7 +306,7 @@ function Board({ page, base, id, onClose, onNew }: { page: string; base?: HTMLIm
     const t = cur.current.tool;
     pick({ color: c, ...(t === 'eraser' || t === 'stamp' || t === 'rainbow' || t === 'stars' ? { tool: lastPen.current } : {}) });
     sfx('pop');
-    void say(L(`color.${c}`));
+    void say([L(`color.${c}`), ...echoColor(c)]);
   };
 
   const usesColor = tool === 'pencil' || tool === 'crayon' || tool === 'brush';

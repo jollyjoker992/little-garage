@@ -5,7 +5,7 @@ import { GENERATORS } from '../src/games/rounds';
 import { SEQ_GENERATORS } from '../src/games/seq/generators';
 import { BRANDS, BRAND_BY_ID, spoken } from '../src/content/brands';
 
-const CUSTOM = ['paint', 'drawing', 'transporter', 'roadPuzzle', 'letterRoad', 'brandMemory', 'buildCar', 'traffic', 'stickers'];
+const CUSTOM = ['paint', 'drawing', 'transporter', 'roadPuzzle', 'letterRoad', 'brandMemory', 'buildCar', 'traffic', 'stickers', 'engDrive'];
 
 describe('catalog', () => {
   it('every ready game is implemented', () => {

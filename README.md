@@ -2,11 +2,11 @@
 
 [![CI](https://github.com/jollyjoker992/little-garage/actions/workflows/ci.yml/badge.svg)](https://github.com/jollyjoker992/little-garage/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-A car-themed learning game for 3–4 year olds: **numbers, letters, colors, shapes, logic, memory and listening**, told with car brands and construction vehicles. Spoken in **English or Vietnamese**, made for the **iPad**, works **offline**, deploys to **Cloudflare Pages**.
+A car-themed learning game for 3–4 year olds: **numbers, letters, colors, shapes, logic, memory and listening**, plus **first English words on English Street**, told with car brands and construction vehicles. Spoken in **English or Vietnamese**, made for the **iPad**, works **offline**, deploys to **Cloudflare Pages**.
 
 **▶ Play it at [playlittlegarage.org](https://playlittlegarage.org)** — free, no ads, no accounts, no tracking. On iPad or iPhone, open it in Safari and tap Share → Add to Home Screen to play offline.
 
-- 6 zones, **26 playable games** (5 more designed, 4 turned off), 3 adaptive levels each
+- 7 zones, **27 playable games** (English Street is one road: 6 towns × 3 stops, 41 English words) (5 more designed, 4 turned off), 3 adaptive levels each
 - Paint Shop coloring book for every vehicle and brand logo, plus a free **Drawing Board** (pencil, crayon, brush, rainbow, stars, stickers, eraser)
 - Stickers, saved paintings and built cars in "My Garage"
 - ⛶ full screen: tapping ▶ goes full screen; the ⛶ button on the home screen toggles it (iPhone: use Add to Home Screen)
@@ -41,6 +41,7 @@ npm run build           # → dist/
 | Doc | What's in it |
 |---|---|
 | [docs/GAME_DESIGN.md](docs/GAME_DESIGN.md) | Design rules, zones, every game × level |
+| [docs/ENGLISH_ZONE.md](docs/ENGLISH_ZONE.md) | English Street: teaching approach, units, classmates, script |
 | [docs/SCRIPTS.md](docs/SCRIPTS.md) | Every spoken line, EN + VI (generated) |
 | [docs/CONTENT_GUIDE.md](docs/CONTENT_GUIDE.md) | Add a brand / vehicle / game / translation / recording |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Code map and contracts |

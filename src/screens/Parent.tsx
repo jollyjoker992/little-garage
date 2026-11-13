@@ -10,6 +10,7 @@ import { say } from '../engine/speech';
 import { resetProgress, update, useStore } from '../engine/store';
 import { clearDrawings } from '../engine/drawings';
 import { isPlayable } from '../games/registry';
+import { ParentEnglish } from './ParentEnglish';
 
 function SoundCheck({ lang }: { lang: 'en' | 'vi' }) {
   const [engine, setEngine] = useState(audioState());
@@ -84,6 +85,7 @@ export function Parent() {
         </div>
       </section>
       <SoundCheck lang={s.lang} />
+      <ParentEnglish />
       <section>
         <h3>Session limit</h3>
         <div className="seg">
@@ -95,7 +97,7 @@ export function Parent() {
       <section>
         <h3>Games & levels</h3>
         <p className="muted">"Auto" moves up after 4 of 5 first-try answers and down after 3 misses in a row. Untick a game to hide it.</p>
-        {ZONES.map((z) => (
+        {ZONES.filter((z) => z.id !== 'english').map((z) => (
           <div key={z.id} className="pzone">
             <h4>{t('en', L(`zone.${z.id}`))}</h4>
             {games.filter((g) => g.zones[0] === z.id).map((g) => (

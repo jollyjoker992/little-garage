@@ -3,6 +3,7 @@ import type { Thing } from '../content/things';
 import type { Lang, Line } from './i18n';
 import type { Rng } from './rng';
 import type { SfxName } from './sfxNames';
+import type { Step } from './speech';
 
 export type Choice = { id: string; thing: Thing };
 
@@ -21,6 +22,19 @@ export type Round = {
   answerSay?: Line;
   /** The scene changes before the question (memory / story games). Choices wait until it's done. */
   stage?: Stage;
+  // ── English Street rounds ──
+  /** Said instead of `prompt` (the sandwich: Vietnamese help around the English word). */
+  promptLines?: Step[];
+  /** Sound after the answer (the vehicle's horn / siren). */
+  answerSfx?: SfxName;
+  /** Replaces the usual cheer / try-again lines (Zip cheers in English). */
+  cheer?: Line;
+  tryAgain?: Line[];
+  /** English words this round practises, and the level they're asked at (word stars). */
+  wordIds?: string[];
+  wordLevel?: 1 | 2 | 3;
+  /** Extra help said after two misses (the meaning of the word). */
+  hintLines?: Step[];
 };
 
 export type Stage =

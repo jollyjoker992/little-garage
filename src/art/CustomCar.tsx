@@ -60,6 +60,15 @@ export function Driver({ kind, x, y, s }: { kind: string; x: number; y: number; 
     <ellipse cx={x} cy={y + s * 0.3} rx={s * 0.42} ry={s * 0.32} fill="#d7ccc8" />
     {eyes}<circle cx={x} cy={y + s * 0.2} r={s * 0.13} fill={OUT} />
   </g>);
+  if (kind === 'bunny') return (<g>
+    <ellipse cx={x - s * 0.45} cy={y - s * 1.35} rx={s * 0.28} ry={s * 0.8} fill="#fafafa" stroke={OUT} strokeWidth="1.2" />
+    <ellipse cx={x + s * 0.45} cy={y - s * 1.35} rx={s * 0.28} ry={s * 0.8} fill="#fafafa" stroke={OUT} strokeWidth="1.2" />
+    <ellipse cx={x - s * 0.45} cy={y - s * 1.3} rx={s * 0.12} ry={s * 0.5} fill="#f8bbd0" />
+    <ellipse cx={x + s * 0.45} cy={y - s * 1.3} rx={s * 0.12} ry={s * 0.5} fill="#f8bbd0" />
+    <circle cx={x} cy={y} r={s} fill="#fafafa" stroke={OUT} strokeWidth="1.2" />
+    {eyes}<ellipse cx={x} cy={y + s * 0.2} rx={s * 0.16} ry={s * 0.11} fill="#f06292" />
+    <circle cx={x - s * 0.6} cy={y + s * 0.3} r={s * 0.16} fill="#f8bbd0" opacity=".8" /><circle cx={x + s * 0.6} cy={y + s * 0.3} r={s * 0.16} fill="#f8bbd0" opacity=".8" />
+  </g>);
   return null;
 }
 

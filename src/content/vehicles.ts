@@ -2,9 +2,12 @@ import type { SfxName } from '../engine/sfxNames';
 
 export type VehicleId =
   | 'car' | 'policeCar' | 'bus' | 'fireTruck' | 'ambulance'
-  | 'excavator' | 'bulldozer' | 'dumpTruck' | 'crane' | 'mixer' | 'roller';
+  | 'excavator' | 'bulldozer' | 'dumpTruck' | 'crane' | 'mixer' | 'roller'
+  | 'motorbike' | 'bicycle' | 'taxi' | 'truck' | 'garbageTruck' | 'towTruck'
+  | 'train' | 'plane' | 'boat' | 'helicopter' | 'rocket';
 
-export type VehicleCategory = 'road' | 'emergency' | 'construction';
+/** travel = trains, planes, boats… (not on the road). */
+export type VehicleCategory = 'road' | 'emergency' | 'construction' | 'travel';
 
 export type VehicleInfo = {
   id: VehicleId;
@@ -27,6 +30,19 @@ export const VEHICLES: Record<VehicleId, VehicleInfo> = {
   crane: { id: 'crane', category: 'construction', letterEn: 'C' },
   mixer: { id: 'mixer', category: 'construction', letterEn: 'M' },
   roller: { id: 'roller', category: 'construction', letterEn: 'R' },
+  // On the street (English Street town 3)
+  motorbike: { id: 'motorbike', category: 'road', letterEn: 'M' },
+  bicycle: { id: 'bicycle', category: 'road', letterEn: 'B' },
+  taxi: { id: 'taxi', category: 'road', letterEn: 'T' },
+  truck: { id: 'truck', category: 'road', letterEn: 'T' },
+  garbageTruck: { id: 'garbageTruck', category: 'road', letterEn: 'G' },
+  towTruck: { id: 'towTruck', category: 'road', letterEn: 'T' },
+  // Far away (English Street town 6)
+  train: { id: 'train', category: 'travel', letterEn: 'T' },
+  plane: { id: 'plane', category: 'travel', letterEn: 'P' },
+  boat: { id: 'boat', category: 'travel', letterEn: 'B' },
+  helicopter: { id: 'helicopter', category: 'travel', letterEn: 'H' },
+  rocket: { id: 'rocket', category: 'travel', letterEn: 'R' },
 };
 
 export const VEHICLE_IDS = Object.keys(VEHICLES) as VehicleId[];

@@ -49,7 +49,7 @@ export function Home() {
       )}
       <div className="zone-grid">
         {ZONES.map((z, i) => (
-          <button key={z.id} className="zone-card pop-in" style={{ background: z.bg, animationDelay: `${i * 0.06}s` }} onClick={() => { sfx('pop'); go(`#/zone/${z.id}`); }}>
+          <button key={z.id} className={`zone-card z-${z.id} pop-in`} style={{ background: z.bg, animationDelay: `${i * 0.06}s` }} onClick={() => { sfx('pop'); go(`#/zone/${z.id}`); }}>
             <div className="zone-icon"><ThingView thing={z.icon} fit="center" /></div>
             <span className="zone-name">{t(lang, L(`zone.${z.id}`))}</span>
           </button>

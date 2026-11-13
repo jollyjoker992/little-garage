@@ -117,7 +117,7 @@ export function pathCenter(d: string): [number, number] {
   return [x / (n.length / 2), y / (n.length / 2)];
 }
 
-function Car({ p, body = 'sedan', brand, label, police }: { p: Pt; body?: CarBody; brand?: BrandId; label?: string; police?: boolean }) {
+function Car({ p, body = 'sedan', brand, label, police, taxi }: { p: Pt; body?: CarBody; brand?: BrandId; label?: string; police?: boolean; taxi?: boolean }) {
   const s = CAR_SHAPES[body];
   const lift = s.lift ?? 0;
   const wy = 111 - s.wheels.r;
@@ -134,6 +134,10 @@ function Car({ p, body = 'sedan', brand, label, police }: { p: Pt; body?: CarBod
         <rect x="90" y={s.roof - 10} width="14" height="10" rx="3" {...p.f('sirenL', 2)} />
         <rect x="104" y={s.roof - 10} width="14" height="10" rx="3" {...p.f('sirenR', 2)} />
       </>)}
+      {taxi && (<>
+        <rect x="88" y={s.roof - 14} width="32" height="14" rx="3" {...p.f('sign', 2)} />
+        {[0, 1, 2].map((i) => <rect key={i} x={92 + i * 9} y={s.roof - 10} width="5" height="5" {...p.deco('#263238', 1)} />)}
+      </>)}
       {s.spare && <circle cx="14" cy="68" r="12" {...p.deco('#263238', 3)} />}
       <clipPath id={`b${clip}`}><path d={s.body} /></clipPath>
       <path d={s.body} {...p.f('body')} />
@@ -148,7 +152,14 @@ function Car({ p, body = 'sedan', brand, label, police }: { p: Pt; body?: CarBod
   </>);
 }
 
-const ART: Record<Exclude<VehicleId, 'car' | 'policeCar'>, (p: Pt, extra: VehicleProps) => ReactNode> = {
+/** A cab at the front (right), shared by the trucks. */
+const Cab = ({ p, region = 'cab' }: { p: Pt; region?: string }) => (<>
+  <path d="M138 92 L138 40 Q138 34 144 34 L168 34 Q176 34 180 42 L190 62 L190 92 Z" {...p.f(region)} />
+  <path d="M146 42 L166 42 Q170 42 172 46 L180 62 L146 62 Z" {...p.f('window', 2.5)} />
+  <circle cx="186" cy="78" r="5" {...p.f('lights', 2)} />
+</>);
+
+const ART: Record<Exclude<VehicleId, 'car' | 'policeCar' | 'taxi'>, (p: Pt, extra: VehicleProps) => ReactNode> = {
   bus: (p) => (<>
     <rect x="8" y="22" width="184" height="72" rx="12" {...p.f('body')} />
     {[18, 52, 86, 120].map((x) => <rect key={x} x={x} y="32" width="28" height="24" rx="4" {...p.f('window', 2.5)} />)}
@@ -234,6 +245,103 @@ const ART: Record<Exclude<VehicleId, 'car' | 'policeCar'>, (p: Pt, extra: Vehicl
     <circle cx="156" cy="88" r="6" {...p.deco('#cfd8dc')} />
     <Wheel p={p} x={56} y={94} r={18} />
   </>),
+  // ── On the street ──
+  motorbike: (p) => (<>
+    <path d="M46 92 L82 64 L128 64 L154 92" {...p.line} strokeWidth={6} />
+    <path d="M154 92 L138 38" {...p.line} strokeWidth={6} />
+    <path d="M126 34 L150 28" {...p.line} strokeWidth={6} />
+    <path d="M24 78 L62 80" {...p.line} strokeWidth={6} />
+    <path d="M68 66 Q74 44 104 44 L130 44 Q144 46 140 60 L126 72 L78 74 Z" {...p.f('body')} />
+    <path d="M52 52 Q56 42 72 44 L100 46 L96 56 L58 58 Z" {...p.f('seat', 2.5)} />
+    <circle cx="148" cy="50" r="7" {...p.f('lights', 2)} />
+    <Wheel p={p} x={46} y={92} r={19} /><Wheel p={p} x={154} y={92} r={19} />
+  </>),
+  bicycle: (p) => (<>
+    {[48, 152].map((x) => (
+      <g key={x}>
+        {p.so('wheels', 6, <circle cx={x} cy={84} r={26} />)}
+        <path d={`M${x - 18} ${84} L${x + 18} ${84} M${x} ${66} L${x} ${102}`} {...p.line} strokeWidth={1.5} />
+        <circle cx={x} cy={84} r={4} {...p.deco('#90a4ae')} />
+      </g>
+    ))}
+    <path d="M84 44 L82 34" {...p.line} strokeWidth={4} />
+    <path d="M136 46 L132 26 M120 24 L144 26" {...p.line} strokeWidth={5} />
+    {p.so('body', 7, <path d="M48 84 L84 46 L136 46 L152 84 M84 46 L100 84 L136 46 M100 84 L48 84" />)}
+    <path d="M68 34 Q82 26 96 32 L92 38 L72 38 Z" {...p.f('seat', 2.5)} />
+  </>),
+  truck: (p) => (<>
+    <rect x="8" y="16" width="128" height="72" rx="4" {...p.f('body')} />
+    <rect x="8" y="88" width="182" height="6" {...p.deco(p.ink)} />
+    <Cab p={p} />
+    <Wheel p={p} x={38} /><Wheel p={p} x={78} /><Wheel p={p} x={162} />
+  </>),
+  garbageTruck: (p) => (<>
+    <path d="M30 90 L30 26 Q30 20 36 20 L136 20 L136 90 Z" {...p.f('body')} />
+    <path d="M8 90 L8 40 Q8 26 22 24 L36 24 L36 90 Z" {...p.f('hopper')} />
+    <rect x="52" y="40" width="68" height="8" rx="3" {...p.f('stripe', 1.5)} />
+    <rect x="52" y="60" width="68" height="8" rx="3" {...p.f('stripe', 1.5)} />
+    <rect x="8" y="88" width="182" height="6" {...p.deco(p.ink)} />
+    <Cab p={p} />
+    <Wheel p={p} x={40} /><Wheel p={p} x={84} /><Wheel p={p} x={162} />
+  </>),
+  towTruck: (p) => (<>
+    {p.so('boom', 8, <path d="M46 62 L22 24" />)}
+    <path d="M22 24 L22 46" {...p.line} strokeWidth={2.5} />
+    {p.so('hook', 4, <path d="M22 46 Q22 58 30 56 Q35 54 33 48" />)}
+    <rect x="10" y="62" width="106" height="30" rx="5" {...p.f('body')} />
+    <path d="M108 92 L108 40 Q108 28 120 28 L158 28 Q168 28 174 40 L186 62 Q192 66 192 76 L192 92 Z" {...p.f('body')} />
+    <rect x="134" y="20" width="18" height="9" rx="3" {...p.f('siren', 2)} />
+    <path d="M120 36 L156 36 Q163 36 167 44 L175 60 L120 60 Z" {...p.f('window', 2.5)} />
+    <circle cx="187" cy="72" r="5" {...p.f('lights', 2)} />
+    <Wheel p={p} x={48} /><Wheel p={p} x={152} />
+  </>),
+  // ── Far away ──
+  train: (p) => (<>
+    <rect x="4" y="104" width="192" height="6" {...p.deco('#8d6e63')} />
+    <rect x="14" y="18" width="62" height="70" rx="4" {...p.f('cab')} />
+    <rect x="24" y="28" width="42" height="26" rx="3" {...p.f('window', 2.5)} />
+    <rect x="72" y="42" width="98" height="46" rx="12" {...p.f('body')} />
+    <rect x="134" y="16" width="20" height="28" {...p.f('chimney', 2.5)} />
+    <path d="M128 16 L160 16 L156 6 L132 6 Z" {...p.f('chimney', 2.5)} />
+    <rect x="14" y="80" width="160" height="10" {...p.f('stripe', 2)} />
+    <path d="M170 70 L194 92 L170 92 Z" {...p.f('stripe', 2)} />
+    <circle cx="176" cy="54" r="6" {...p.f('lights', 2)} />
+    <Wheel p={p} x={42} y={96} r={14} /><Wheel p={p} x={98} y={96} r={14} /><Wheel p={p} x={146} y={96} r={14} />
+  </>),
+  plane: (p) => (<>
+    <path d="M44 52 L20 14 L38 14 L72 50 Z" {...p.f('tail')} />
+    <path d="M12 60 Q12 46 30 46 L158 44 Q190 46 196 60 Q190 76 158 76 L30 74 Q12 72 12 60 Z" {...p.f('body')} />
+    <rect x="34" y="64" width="140" height="5" {...p.f('stripe', 1.5)} />
+    {[58, 78, 98, 118, 138].map((x) => <circle key={x} cx={x} cy={55} r={5} {...p.f('window', 2)} />)}
+    <path d="M164 50 Q180 50 188 58 L164 58 Z" {...p.f('window', 2)} />
+    <path d="M84 66 L122 66 L98 108 L80 108 Z" {...p.f('wing')} />
+  </>),
+  boat: (p) => (<>
+    <rect x="96" y="10" width="6" height="52" {...p.deco(p.ink)} />
+    <path d="M102 12 L102 54 L150 54 Z" {...p.f('sail')} />
+    <path d="M96 18 L96 54 L58 54 Z" {...p.f('sail')} />
+    <path d="M8 60 L192 60 L168 98 L32 98 Z" {...p.f('body')} />
+    <rect x="12" y="62" width="176" height="7" {...p.f('stripe', 1.5)} />
+    {[64, 100, 136].map((x) => <circle key={x} cx={x} cy={82} r={6} {...p.f('window', 2)} />)}
+    <path d="M0 102 Q25 94 50 102 T100 102 T150 102 T200 102 L200 120 L0 120 Z" {...p.deco('#4fc3f7')} />
+  </>),
+  helicopter: (p) => (<>
+    {p.so('rotor', 6, <path d="M36 16 L172 16" />)}
+    <rect x="100" y="16" width="8" height="18" {...p.deco(p.ink)} />
+    <path d="M12 46 L72 54 L72 66 L12 58 Z" {...p.f('tail')} />
+    <path d="M6 34 L20 34 L22 60 L8 60 Z" {...p.f('tail')} />
+    <path d="M66 50 Q70 32 104 32 L134 32 Q176 34 182 64 Q184 82 160 84 L86 84 Q66 82 66 64 Z" {...p.f('body')} />
+    <path d="M136 38 Q166 40 172 62 L136 62 Z" {...p.f('window', 2.5)} />
+    <path d="M84 100 L172 100 M100 84 L96 100 M152 84 L156 100" {...p.line} strokeWidth={4} />
+  </>),
+  rocket: (p) => (<>
+    <path d="M88 92 L100 116 L112 92 Z" {...p.f('flame', 2)} />
+    <path d="M84 82 L64 104 L64 84 L84 60 Z" {...p.f('fin')} />
+    <path d="M116 82 L136 104 L136 84 L116 60 Z" {...p.f('fin')} />
+    <path d="M100 4 Q124 26 120 92 L80 92 Q76 26 100 4 Z" {...p.f('body')} />
+    <path d="M100 4 Q111 14 115 28 L85 28 Q89 14 100 4 Z" {...p.f('nose', 2.5)} />
+    <circle cx="100" cy="52" r="11" {...p.f('window', 2.5)} />
+  </>),
 };
 
 export function VehicleArt(props: VehicleProps) {
@@ -244,6 +352,7 @@ export function VehicleArt(props: VehicleProps) {
     <svg {...(box ? { x: box.x, y: box.y, width: box.w, height: box.h } : {})} viewBox={`0 ${top} 200 ${120 - top}`} preserveAspectRatio={align === 'center' ? 'xMidYMid meet' : 'xMidYMax meet'} className={className} role="img" aria-label={v}>
       {v === 'car' ? <Car p={p} body={body} brand={brand} label={label} />
         : v === 'policeCar' ? <Car p={p} body="sedan" label={label} police />
+        : v === 'taxi' ? <Car p={p} body="sedan" taxi />
         : ART[v](p, props)}
     </svg>
   );
