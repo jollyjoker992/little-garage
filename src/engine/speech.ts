@@ -95,9 +95,11 @@ function pickVoice(tag: string): SpeechSynthesisVoice | undefined {
   );
 }
 
-/** A line that has not started after this long is stuck (iOS: queued behind a line that never ended, or speech still locked). */
+/** A line that hasn't started (and isn't being spoken) after this long was ignored: iOS speech is still locked. */
 export const START_MS = 3000;
-/** Longest a started line may take: generous, measured from its start and scaled by its speed. */
+/** A line that ends sooner than this without starting was thrown away (Safari, right after a cancel). */
+export const DROP_MS = 400;
+/** Longest a line may take: generous, scaled by its speed. */
 const lineMs = (text: string, rate: number) => 2500 + (text.length * 160) / Math.max(0.3, rate);
 
 /** True once any line has really started in this page: iOS then allows speech without a tap. */
@@ -120,8 +122,13 @@ if (typeof document !== 'undefined') {
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') unlocked = false; });
 }
 
-/** Speak one line once. Resolves 'ok' when it ends (or errors), 'stuck' when it never even starts. */
-function speakOnce(text: string, my: number, lang?: Lang, voice?: string): Promise<'ok' | 'stuck'> {
+type Outcome = 'ok' | 'dropped' | 'ignored';
+
+/**
+ * Speak one line once. 'ok': it was spoken (or may have been — never say those twice). 'dropped': it ended
+ * at once without starting or saying a word, so nothing was heard. 'ignored': nothing happened at all.
+ */
+function speakOnce(text: string, my: number, lang?: Lang, voice?: string): Promise<Outcome> {
   return new Promise((resolve) => {
     if (!synth || my !== token) return resolve('ok');
     const st = getState();
@@ -132,56 +139,53 @@ function speakOnce(text: string, my: number, lang?: Lang, voice?: string): Promi
     if (v) u.voice = v;
     u.rate = Math.min(2, st.rate * (vc?.rate ?? 1));
     u.pitch = vc?.pitch ?? 1.1;
-    let timer: ReturnType<typeof setTimeout>;
-    const done = (r: 'ok' | 'stuck') => {
-      clearTimeout(timer);
+    const t0 = Date.now();
+    let heard = false;
+    const hear = () => { heard = true; unlocked = true; };
+    const done = (r: Outcome) => {
+      clearTimeout(startTimer);
+      clearTimeout(endTimer);
       if (utter === u) utter = null;
       resolve(r);
     };
-    timer = setTimeout(() => done('stuck'), START_MS);
-    u.onstart = () => {
-      unlocked = true;
-      emit({ type: 'start', voice: u.voice?.name ?? '(default voice)' });
-      // iOS sometimes never fires onend; don't hang the game.
-      clearTimeout(timer);
-      timer = setTimeout(() => { emit({ type: 'timeout' }); done('ok'); }, lineMs(text, u.rate));
+    const quickSilence = () => !heard && Date.now() - t0 < DROP_MS;
+    // Not started and the browser isn't speaking: the line was ignored. (Speaking without a start event
+    // happens in Safari: then it's playing, so wait for its end.)
+    const startTimer = setTimeout(() => { if (!heard && !synth.speaking && !synth.pending) { emit({ type: 'timeout' }); done('ignored'); } }, START_MS);
+    // iOS sometimes never fires onend; don't hang the game.
+    const endTimer = setTimeout(() => { emit({ type: 'timeout' }); done('ok'); }, START_MS + lineMs(text, u.rate));
+    u.onstart = () => { hear(); emit({ type: 'start', voice: u.voice?.name ?? '(default voice)' }); };
+    u.onboundary = hear;
+    u.onend = () => { emit({ type: 'end' }); done(quickSilence() ? 'dropped' : 'ok'); };
+    u.onerror = (e) => {
+      emit({ type: 'error', error: e.error });
+      done(e.error !== 'canceled' && e.error !== 'interrupted' && quickSilence() ? 'dropped' : 'ok');
     };
-    u.onend = () => { emit({ type: 'end' }); done('ok'); };
-    u.onerror = (e) => { emit({ type: 'error', error: e.error }); done('ok'); };
     utter = u;
     if (synth.paused) synth.resume(); // un-stick Safari's queue after the app was in the background
     synth.speak(u);
   });
 }
 
-/** The say() sequence in which a line never started even after clearing the queue: its other lines get one try. */
-let silentToken = -1;
-
-/** Clear whatever is stuck in the browser's queue, then give Safari a moment before the next speak(). */
-async function unstick() {
-  synth?.cancel();
-  await wait(120);
-}
-
 /**
  * Speak one line. The lines of a sequence are spoken one after another, so anything still in the browser's
  * queue is left over (a line that never ended): clear it first, or the new line waits behind it in silence.
- * A line that never starts is tried once more after clearing the queue, then skipped (and once that has
- * happened, the rest of the sequence doesn't wait twice per line: speech is off until the next tap).
+ * A line the browser threw away unheard is said once more; a line that may have been heard never is.
  */
 async function speakText(text: string, my: number, lang?: Lang, voice?: string): Promise<void> {
   if (!synth) return emit({ type: 'unsupported' });
   if (my !== token) return;
-  if (synth.speaking || synth.pending) await unstick();
-  const tries = silentToken === my ? 1 : 2;
-  for (let attempt = 0; attempt < tries; attempt++) {
-    if (my !== token) return;
-    if ((await speakOnce(text, my, lang, voice)) === 'ok') return;
-    if (my !== token) return;
-    emit({ type: 'timeout' });
-    await unstick();
+  if (synth.speaking || synth.pending) {
+    synth.cancel();
+    await wait(150);
   }
-  silentToken = my;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    if (my !== token) return;
+    const r = await speakOnce(text, my, lang, voice);
+    if (r === 'ok') return;
+    if (r === 'ignored') break; // speech is locked: trying again won't help
+    await wait(150);
+  }
   unlocked = false; // nothing came out: let the next tap unlock speech again
 }
 

@@ -1,8 +1,11 @@
-// The speech engine against a fake speechSynthesis that can act like iOS Safari: a line that never
-// starts (speech still locked, or queued behind a line that never ended).
+// The speech engine against a fake speechSynthesis that acts like Safari / iOS Safari can:
+// - locked: iOS before a tap — speak() is silently ignored;
+// - dropOnce: Safari right after a cancel — the line ends at once, unheard;
+// - talkNoStart: Safari speaks the line but never fires 'start' (it must not be said twice);
+// - stuckOnce: the first line never starts or ends and blocks the queue until cancel().
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-type Mode = 'ok' | 'locked' | 'stuckOnce';
+type Mode = 'ok' | 'locked' | 'dropOnce' | 'talkNoStart' | 'stuckOnce';
 
 class FakeUtterance {
   text: string;
@@ -12,6 +15,7 @@ class FakeUtterance {
   volume = 1;
   voice: unknown = null;
   onstart: (() => void) | null = null;
+  onboundary: (() => void) | null = null;
   onend: (() => void) | null = null;
   onerror: ((e: { error: string }) => void) | null = null;
   constructor(text: string) { this.text = text.replace(/!$/, ''); }
@@ -19,7 +23,7 @@ class FakeUtterance {
 
 function fakeSynth(mode: Mode) {
   const log: string[] = [];
-  let stuck = mode === 'stuckOnce';
+  let quirk = mode !== 'ok';
   const synth = {
     speaking: false,
     pending: false,
@@ -27,14 +31,16 @@ function fakeSynth(mode: Mode) {
     getVoices: () => [],
     addEventListener: () => {},
     resume: () => {},
-    cancel: () => { log.push('cancel'); synth.speaking = false; synth.pending = false; stuck = false; },
+    cancel: () => { log.push('cancel'); synth.speaking = false; synth.pending = false; },
     speak: (u: FakeUtterance) => {
       log.push(`speak ${u.text}`);
-      if (mode === 'locked') return; // iOS before a tap: silently ignored
-      if (stuck) { synth.speaking = true; return; } // queued behind a line that never ends
+      if (mode === 'locked') return;
+      if (quirk && mode === 'dropOnce') { quirk = false; setTimeout(() => { log.push(`end ${u.text}`); u.onend?.(); }, 20); return; }
+      if (quirk && mode === 'stuckOnce') { quirk = false; synth.speaking = true; return; }
       synth.speaking = true;
-      setTimeout(() => { log.push(`start ${u.text}`); u.onstart?.(); }, 50);
-      setTimeout(() => { synth.speaking = false; log.push(`end ${u.text}`); u.onend?.(); }, 500);
+      const talk = mode === 'talkNoStart' ? 4000 : 500; // longer than START_MS
+      if (mode !== 'talkNoStart') setTimeout(() => { log.push(`start ${u.text}`); u.onstart?.(); }, 50);
+      setTimeout(() => { synth.speaking = false; log.push(`end ${u.text}`); u.onend?.(); }, talk);
     },
   };
   return { synth, log };
@@ -50,70 +56,80 @@ async function load(mode: Mode) {
   vi.stubGlobal('fetch', () => Promise.reject(new Error('offline')));
   const speech = await import('../src/engine/speech');
   const { L } = await import('../src/engine/i18n');
-  return { speech, L, log, synth, tap: () => listeners.click?.() };
+  const line = (x: string) => L('say.value', { value: x });
+  return { speech, line, log, synth, tap: () => listeners.click?.() };
 }
 
 /** Run say() to the end, moving the fake clock along. */
 async function run<T>(p: Promise<T>) {
   let done = false;
   void p.then(() => { done = true; });
-  for (let i = 0; i < 400 && !done; i++) await vi.advanceTimersByTimeAsync(100);
+  for (let i = 0; i < 600 && !done; i++) await vi.advanceTimersByTimeAsync(100);
   expect(done).toBe(true);
   return p;
 }
+
+const spoken = (log: string[]) => log.filter((x) => x.startsWith('speak')).map((x) => x.slice(6));
 
 beforeEach(() => { vi.useFakeTimers(); });
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
 
 describe('speech', () => {
   it('speaks each line once when the voice works', async () => {
-    const { speech, L, log } = await load('ok');
-    await run(speech.say([L('say.value', { value: 'one' }), L('say.value', { value: 'two' })]));
+    const { speech, line, log } = await load('ok');
+    await run(speech.say([line('one'), line('two')]));
     expect(log).toEqual(['speak one', 'start one', 'end one', 'speak two', 'start two', 'end two']);
   });
 
-  it('clears a stuck queue and says the line again', async () => {
-    const { speech, L, log } = await load('stuckOnce');
-    await run(speech.say([L('say.value', { value: 'one' }), L('say.value', { value: 'two' })]));
-    expect(log).toEqual(['speak one', 'cancel', 'speak one', 'start one', 'end one', 'speak two', 'start two', 'end two']);
+  it('never says a line twice when Safari speaks it without a start event', async () => {
+    const { speech, line, log } = await load('talkNoStart');
+    await run(speech.say([line('one'), line('two')]));
+    expect(log).toEqual(['speak one', 'end one', 'speak two', 'end two']);
   });
 
-  it('clears a line left in the queue before the next one', async () => {
-    const { speech, L, log, synth } = await load('ok');
-    synth.speaking = true; // a line from before that never ended
-    await run(speech.say(L('say.value', { value: 'one' })));
-    expect(log).toEqual(['cancel', 'speak one', 'start one', 'end one']);
+  it('says a line again when Safari threw it away unheard', async () => {
+    const { speech, line, log } = await load('dropOnce');
+    await run(speech.say([line('one'), line('two')]));
+    expect(spoken(log)).toEqual(['one', 'one', 'two']);
+    expect(log).toContain('start one');
   });
 
-  it('moves on when speech is locked, without waiting twice on every line', async () => {
-    const { speech, L, log } = await load('locked');
+  it('clears a line stuck in the queue before the next one, without saying it again', async () => {
+    const { speech, line, log } = await load('stuckOnce');
+    await run(speech.say([line('one'), line('two')]));
+    expect(spoken(log)).toEqual(['one', 'two']);
+    expect(log.slice(-4)).toEqual(['cancel', 'speak two', 'start two', 'end two']);
+  });
+
+  it('moves on when speech is locked, one try per line', async () => {
+    const { speech, line, log } = await load('locked');
     const t0 = Date.now();
-    await run(speech.say([1, 2, 3].map((n) => L('say.value', { value: `line${n}` }))));
-    expect(log.filter((x) => x.startsWith('speak'))).toEqual(['speak line1', 'speak line1', 'speak line2', 'speak line3']);
-    expect(Date.now() - t0).toBeLessThan(4 * speech.START_MS + 1000);
+    await run(speech.say([line('a'), line('b'), line('c')]));
+    expect(spoken(log)).toEqual(['a', 'b', 'c']);
+    expect(Date.now() - t0).toBeLessThan(3 * speech.START_MS + 1000);
   });
 
   it('unlocks speech on a tap until a line has been heard', async () => {
-    const { speech, L, log, tap } = await load('ok');
+    const { speech, line, log, tap } = await load('ok');
     tap();
     expect(log).toEqual(['speak  ']);
-    await run(speech.say(L('say.value', { value: 'one' })));
+    await run(speech.say(line('one')));
     log.length = 0;
     tap();
     expect(log).toEqual([]);
   });
 
   it('unlocks again on a tap after a line could not be heard', async () => {
-    const { speech, L, log, tap } = await load('locked');
-    await run(speech.say(L('say.value', { value: 'one' })));
+    const { speech, line, log, tap } = await load('locked');
+    await run(speech.say(line('one')));
     log.length = 0;
     tap();
     expect(log).toEqual(['speak  ']);
   });
 
   it('does not add the silent line when the tap already started speech', async () => {
-    const { speech, L, log, tap } = await load('ok');
-    const p = speech.say(L('say.value', { value: 'one' }));
+    const { speech, line, log, tap } = await load('ok');
+    const p = speech.say(line('one'));
     tap();
     await run(p);
     expect(log).toEqual(['speak one', 'start one', 'end one']);
